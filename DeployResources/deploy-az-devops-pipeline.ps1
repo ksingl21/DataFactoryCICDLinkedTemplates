@@ -17,7 +17,7 @@ $env:AZURE_DEVOPS_EXT_PAT = $env:AzureDevopsDEWithNickPAT
 
 # Resource Names and Config
 $AzurePipelineName = 'DataFactoryCICDLinkedTemplates'
-$AzurePipelineYamlFilePath = 'DataFactoryCICDLinkedTemplates/cicd/cicd-pipeline.yml'
+$AzurePipelineYamlFilePath = '/cicd/cicd-pipeline.yml'
 
 $AzureDevOpsOrganizationURL = $env:AzureDevopsDEWithNickOrganizationURL # Ex: https://dev.azure.com/MyOrganizationName/
 $AzureDevOpsProjectName = $env:AzureDevopsDEWithNickADFCICDProjectName  # Ex: MyProjectName
@@ -47,7 +47,7 @@ else
 
 # To delete and clean up everything
 
-# # Get the ID of the pipeline
+# Get the ID of the pipeline
 # $PipelineID = az pipelines list --organization $AzureDevOpsOrganizationURL --project $AzureDevOpsProjectName `
 #     --query "[?name=='$AzurePipelineName'] | [0].id"
 
