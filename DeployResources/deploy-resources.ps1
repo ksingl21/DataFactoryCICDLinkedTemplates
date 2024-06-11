@@ -31,9 +31,10 @@ az group create --name $PRODResourceGroupName --location $Location # PROD
 az datafactory create --factory-name $DataFactoryName --resource-group $DEVResourceGroupName --location $Location
 
 
-# Creates 200 new Data Factory pipelines (35 Wait Activities in each pipeline)
+# Creates 200 new Data Factory pipelines (35 Wait Activities in each pipeline). 
+# To deploy fewer or more pipelines, change the -le 200 to a different number. Ex: -le 10 will deploy 10 pipelines.
 # Loops from 1 to 200 creating a pipeline named PL_WAIT_Number. Ex: PL_WAIT_1, PL_WAIT_2... PL_WAIT_200 
-for ($i = 1; $i -le 200; $i++) {
+for ($i = 1; $i -le 10; $i++) {
     $PipelineName = "PL_WAIT_" + $i.ToString() # Ex: PL_WAIT_1
     
     # Creates a new Data Factory Pipeline using the 35 Wait Activity Data Factory JSON file: 'DataFactoryPipeline.json'
