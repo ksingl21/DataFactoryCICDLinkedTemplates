@@ -46,15 +46,15 @@ stages:
   #         - powershell: |
   #             Write-Host "Deploy To UAT has been fully approved. Starting the deployment to UAT."
   
-  - job: DeployAzureResources
-    displayName: "Deploy Azure Resources Via Bicep"
-    steps:
-    - template: azure-resources/deploy-azure-resources.yml
-      parameters:
-        AzureResourceManagerConnection: "${{ variables.AzureResourceManagerConnection }}"
-        DataFactoryName: "${{ variables.DataFactoryName }}"
-        ADFResourceGroupName: "${{ variables.ADFResourceGroupName }}"
-        ADFBicepTemplateFilePath: "${{ variables.ADFBicepTemplateFilePath }}"
+  # - job: DeployAzureResources
+  #   displayName: "Deploy Azure Resources Via Bicep"
+  #   steps:
+  #   - template: azure-resources/deploy-azure-resources.yml
+  #     parameters:
+  #       AzureResourceManagerConnection: "${{ variables.AzureResourceManagerConnection }}"
+  #       DataFactoryName: "${{ variables.DataFactoryName }}"
+  #       ADFResourceGroupName: "${{ variables.ADFResourceGroupName }}"
+  #       ADFBicepTemplateFilePath: "${{ variables.ADFBicepTemplateFilePath }}"
         # KeyVaultName: "${{ variables.KeyVaultName }}"
         # KeyVaultResourceGroupName: "${{ variables.KeyVaultResourceGroupName }}"
         # KeyVaultURL: "${{ variables.KeyVaultURL }}"
