@@ -31,16 +31,6 @@ az group create --name $PRODResourceGroupName --location $Location # PROD
 az datafactory create --factory-name $DataFactoryName --resource-group $DEVResourceGroupName --location $Location
 
 
-# Creates 200 new Data Factory pipelines (35 Wait Activities in each pipeline)
-# Loops from 1 to 200 creating a pipeline named PL_WAIT_Number. Ex: PL_WAIT_1, PL_WAIT_2... PL_WAIT_200 
-for ($i = 1; $i -le 200; $i++) {
-    $PipelineName = "PL_WAIT_" + $i.ToString() # Ex: PL_WAIT_1
-    
-    # Creates a new Data Factory Pipeline using the 35 Wait Activity JSON file: DataFactoryPipeline.json
-    az datafactory pipeline create --factory-name $DataFactoryName --pipeline $DataFactoryPipelineDefinitionFileName --name $PipelineName --resource-group $DEVResourceGroupName
-}
-
-
 # Configure Data Factory to GitHub repo
 
 # Get the resource ID for the Data Factory. Ex: /subscriptions/xxxxxx/resourceGroups/xxxxx/providers/Microsoft.DataFactory/factories/datafactoryname
@@ -50,6 +40,16 @@ $DataFactoryResourceID = $(az ad sp list --display-name $DataFactoryName --query
 az datafactory configure-factory-repo --factory-git-hub-configuration host-name=$GitHubHostNameURL  account-name=$GitHubAccountName repository-name=$GitHubRepositoryName `
     collaboration-branch=$GitHubRepoCollaborationBranchName root-folder=$GitHubRepoRootFolderName --location $Location `
     --factory-resource-id $DataFactoryResourceID
+
+
+# Creates 200 new Data Factory pipelines (35 Wait Activities in each pipeline)
+# Loops from 1 to 200 creating a pipeline named PL_WAIT_Number. Ex: PL_WAIT_1, PL_WAIT_2... PL_WAIT_200 
+for ($i = 1; $i -le 200; $i++) {
+    $PipelineName = "PL_WAIT_" + $i.ToString() # Ex: PL_WAIT_1
+    
+    # Creates a new Data Factory Pipeline using the 35 Wait Activity JSON file: DataFactoryPipeline.json
+    az datafactory pipeline create --factory-name $DataFactoryName --pipeline $DataFactoryPipelineDefinitionFileName --name $PipelineName --resource-group $DEVResourceGroupName
+}
 
 
 # To cleanup and delete everything above
