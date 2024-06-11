@@ -36,7 +36,7 @@ az datafactory create --factory-name $DataFactoryName --resource-group $DEVResou
 for ($i = 1; $i -le 200; $i++) {
     $PipelineName = "PL_WAIT_" + $i.ToString() # Ex: PL_WAIT_1
     
-    # Creates a new Data Factory Pipeline using the 35 Wait Activity JSON file: DataFactoryPipeline.json
+    # Creates a new Data Factory Pipeline using the 35 Wait Activity Data Factory JSON file: 'DataFactoryPipeline.json'
     az datafactory pipeline create --factory-name $DataFactoryName --pipeline $DataFactoryPipelineDefinitionFileName --name $PipelineName --resource-group $DEVResourceGroupName
 }
 
@@ -51,7 +51,10 @@ az datafactory configure-factory-repo --factory-git-hub-configuration host-name=
     collaboration-branch=$GitHubRepoCollaborationBranchName root-folder=$GitHubRepoRootFolderName --location $Location `
     --factory-resource-id $DataFactoryResourceID
 
-    
+# Manual step:
+    # Go into the Data Factory, manage tab, Git Configuration then import resources to main branch.
+
+
 # To cleanup and delete everything above
 # az group delete --name $DEVResourceGroupName
 # az group delete --name $UATResourceGroupName

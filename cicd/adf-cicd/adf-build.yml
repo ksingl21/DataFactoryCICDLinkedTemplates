@@ -21,7 +21,7 @@ steps:
 - task: NodeTool@0
   displayName: "Install Node.js"
   inputs:
-    versionSpec: "14.x"
+    versionSpec: "18.x"
 
 - task: Npm@1
   displayName: "Install NPM Package"
