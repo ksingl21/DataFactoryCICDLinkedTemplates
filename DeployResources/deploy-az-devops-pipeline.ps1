@@ -32,7 +32,7 @@ $CheckIfPipelineExists = az pipelines list --organization $AzureDevOpsOrganizati
     --query "[?name=='$AzurePipelineName'].{Name:name} | [0].Name"
 
 
-# If $ChickIfPipelineExists is empty (pipeline doesn't exist), the length would be zero.
+# If $CheckIfPipelineExists is empty (pipeline doesn't exist), the length would be zero.
 if ($CheckIfPipelineExists.Length -eq 0) 
 {
     az pipelines create --name $AzurePipelineName --organization $AzureDevOpsOrganizationURL --project $AzureDevOpsProjectName `
