@@ -31,17 +31,6 @@ az group create --name $PRODResourceGroupName --location $Location # PROD
 az datafactory create --factory-name $DataFactoryName --resource-group $DEVResourceGroupName --location $Location
 
 
-# Configure Data Factory to GitHub repo
-
-# Get the resource ID for the Data Factory. Ex: /subscriptions/xxxxxx/resourceGroups/xxxxx/providers/Microsoft.DataFactory/factories/datafactoryname
-$DataFactoryResourceID = $(az ad sp list --display-name $DataFactoryName --query "[].alternativeNames[1]" --output tsv)
-
-# Configures the Data Factory to the GitHub repo
-az datafactory configure-factory-repo --factory-git-hub-configuration host-name=$GitHubHostNameURL  account-name=$GitHubAccountName repository-name=$GitHubRepositoryName `
-    collaboration-branch=$GitHubRepoCollaborationBranchName root-folder=$GitHubRepoRootFolderName --location $Location `
-    --factory-resource-id $DataFactoryResourceID
-
-
 # Creates 200 new Data Factory pipelines (35 Wait Activities in each pipeline)
 # Loops from 1 to 200 creating a pipeline named PL_WAIT_Number. Ex: PL_WAIT_1, PL_WAIT_2... PL_WAIT_200 
 for ($i = 1; $i -le 200; $i++) {
@@ -52,6 +41,17 @@ for ($i = 1; $i -le 200; $i++) {
 }
 
 
+# Configure Data Factory to GitHub repo
+
+# Get the resource ID for the Data Factory. Ex: /subscriptions/xxxxxx/resourceGroups/xxxxx/providers/Microsoft.DataFactory/factories/datafactoryname
+$DataFactoryResourceID = $(az ad sp list --display-name $DataFactoryName --query "[].alternativeNames[1]" --output tsv)
+
+# Configures the Data Factory to the GitHub repo
+az datafactory configure-factory-repo --factory-git-hub-configuration host-name=$GitHubHostNameURL  account-name=$GitHubAccountName repository-name=$GitHubRepositoryName `
+    collaboration-branch=$GitHubRepoCollaborationBranchName root-folder=$GitHubRepoRootFolderName --location $Location `
+    --factory-resource-id $DataFactoryResourceID
+
+    
 # To cleanup and delete everything above
 # az group delete --name $DEVResourceGroupName
 # az group delete --name $UATResourceGroupName
