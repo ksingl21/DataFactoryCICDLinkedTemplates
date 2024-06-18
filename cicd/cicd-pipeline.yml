@@ -25,6 +25,17 @@ stages:
         ResourceGroupName: "${{ variables.BuildDataFactoryResourceGroupName }}"
         ADFArtifactName: "${{ variables.ADFArtifactName }}"
         WorkingDirectory: "${{ variables.WorkingDirectory }}"
+  
+  - job: NewLinkedTemplateCreateDeploy
+    dependsOn: ValidateAndBuildDataFactoryTemplate
+    condition: succeeded()
+    displayName: "New Linked Template Create Deploy"
+    steps:
+    - task: PowerShell@2
+      inputs:
+        targetType: 'filePath'
+        filePath: 'new-linked-template/new-linked-template-create-deploy.ps1'
+        arguments: "-RootFolderPathLinkedARMTemplates '$(Pipeline.Workspace)/ADFArtifact/linkedTemplates' -ResourceGroupName 'rg-adf-cicd-linked-uat'" 
 
 # DEPLOY TO UAT
 - stage: DeployToUAT
