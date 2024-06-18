@@ -30,7 +30,7 @@ stages:
       displayName: "Download The ADF Artifact"
       inputs:
         buildType: "current"
-        artifactName: "${{ parameters.ADFArtifactName }}"
+        artifactName: "ADFArtifact"
         targetpath: "$(Pipeline.Workspace)/ADFArtifact"
     
     
