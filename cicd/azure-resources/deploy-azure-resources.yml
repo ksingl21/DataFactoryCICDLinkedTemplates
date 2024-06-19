@@ -13,16 +13,6 @@ parameters:
   type: string
   default: "$(Build.Repository.LocalPath)/cicd/azure-resources/adf.bicep"
 
-# # Key Vault
-# - name: KeyVaultName
-#   type: string
-# - name: KeyVaultResourceGroupName
-#   type: string
-# - name: KeyVaultURL
-#   type: string
-# - name: KeyVaultBicepTemplateFilePath
-#   type: string
-#   default: "$(Build.Repository.LocalPath)/cicd/azure-resources/keyvault.bicep"
 
 steps:
 - checkout: self
@@ -39,17 +29,4 @@ steps:
         --name "MyADFDeployment$(Build.BuildNumber)" \
         --resource-group "${{ parameters.ADFResourceGroupName }}" \
         --template-file "${{ parameters.ADFBicepTemplateFilePath }}" \
-        --parameters dataFactoryName="${{ parameters.DataFactoryName }}" 
-
-# - task: AzureCLI@2
-#   displayName: "Key Vault Deploy Via Bicep"
-#   inputs:
-#     azureSubscription: "${{ parameters.AzureResourceManagerConnection }}"
-#     scriptType: bash
-#     scriptLocation: "inlineScript"
-#     inlineScript: |
-#       az deployment group create \
-#         --name "MyKeyVaultDeployment$(Build.BuildNumber)" \
-#         --resource-group "${{ parameters.KeyVaultResourceGroupName }}" \
-#         --template-file "${{ parameters.KeyVaultBicepTemplateFilePath }}" \
-#         --parameters keyVaultName="${{ parameters.KeyVaultName }}" keyVaultURL="${{ parameters.KeyVaultURL }}" 
+        --parameters dataFactoryName="${{ parameters.DataFactoryName }}"

@@ -20,18 +20,23 @@ variables:
 - name: ADFArtifactName # Data Factory artifact name created during the adf-build.yml job template
   value: ADFArtifact
 
-# # Key Vault
-# - name: KeyVaultName
-#   value: kv-njl-adf-cicd-uat
-      
-# - name: KeyVaultResourceGroupName
-#   value: rg-adf-cicd-uat
-      
-# - name: KeyVaultURL 
-#   value: https://kv-njl-adf-cicd-uat.vault.azure.net/      
-      
-# - name: KeyVaultBicepTemplateFilePath
-#   value: "$(Build.Repository.LocalPath)/cicd/azure-resources/keyvault.bicep"
+
+# Linked ADF ARM Template Deployment Variables
+- name: TemplateSpecsResourceGroupName
+  value: rg-adf-cicd-linked-uat
+
+- name: TemplateSpecsResourceGroupLocation
+  value: "eastus"
+
+- name: TemplateSpecMasterName
+  value: NewARMTemplateV2_master
+
+- name: TemplateSpecMasterVersionNumber # Version number for the Template Specs. Ex: 1.0.0.0 Ex2: 1.0.0.1 etc.
+  value: "1.0.0.0"
+
+# - name: OutputFolderPathNewADFMasterARMTemplate
+#   value: "$(Build.Repository.LocalPath)"
+
 
 # Shared
 - name: ResourceGroupLocation

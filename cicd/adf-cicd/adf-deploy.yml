@@ -13,6 +13,18 @@ parameters:
   type: string
 - name: DataFactoryTemplateParametersFilePath
   type: string
+
+# ADF Linked Template Parameters
+- name: TemplateSpecsResourceGroupName
+  type: string
+- name: TemplateSpecsResourceGroupLocation
+  type: string
+- name: TemplateSpecMasterName
+  type: string
+- name: TemplateSpecMasterVersionNumber
+  type: string
+
+# Environment
 - name: Environment
   type: string
   values:
@@ -56,23 +68,50 @@ steps:
       -predeployment $true
       -deleteDeployment $false
 
-- task: AzureResourceManagerTemplateDeployment@3
-  displayName: "Deploy ADF ARM Template"
+
+- task: AzureCLI@2
+  displayName: 'Deploy To UAT ADF Using Linked Template Spec'
   inputs:
-    deploymentScope: "Resource Group"
-    azureResourceManagerConnection: "${{ parameters.AzureResourceManagerConnection }}"
-    ${{ if eq(parameters.Environment, 'UAT') }}:
-      subscriptionId: "$(UATSubscriptionID)"
-    ${{ else }}:
-      subscriptionId: "$(PRODSubscriptionID)"
-    action: "Create Or Update Resource Group"
-    resourceGroupName: "${{ parameters.ResourceGroupName }}"
-    location: "${{ parameters.ResourceGroupLocation }}"
-    templateLocation: "Linked artifact"
-    csmFile: "$(Pipeline.Workspace)/ADFArtifact/ARMTemplateForFactory.json"
-    csmParametersFile: "${{ parameters.DataFactoryTemplateParametersFilePath }}"
-    deploymentOutputs: "armADFOutputs"
-    deploymentMode: "Incremental"
+    azureSubscription: 'DataFactoryCICDAzureResourceManager'
+    scriptType: 'pscore'
+    targetType: 'filePath'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      Write-Host "Setting the subscription based on the environment."
+      
+      ${{ if eq(parameters.Environment, 'UAT') }}:
+        az account set --subscription "$(UATSubscriptionID)"
+      ${{ else }}:
+        az account set --subscription "$(PRODSubscriptionID)"
+
+      Write-Host "Attempting to retrieve the resource ID for the new ${{ parameters.TemplateSpecMasterName }} Template Spec"
+      $TemplateSpecResourceID = $(az ts show --name '${{ parameters.TemplateSpecMasterName }}' --resource-group '${{ parameters.TemplateSpecsResourceGroupName }}' --version '${{ parameters.TemplateSpecMasterVersionNumber }}' --query "id")
+
+      Write-Host "Successfully retrieved the resource ID for the new master Template Spec ${{ parameters.TemplateSpecMasterName }}"
+
+      Write-Host "Attempting to deploy the master linked Template Spec to Data Factory ${{ parameters.DataFactoryName }}. This may take a couple of mins."
+      az deployment group create --resource-group '${{ parameters.ResourceGroupName }}' --template-spec $TemplateSpecResourceID --parameters '${{ parameters.DataFactoryTemplateParametersFilePath }}' --output none
+      Write-Host "Successfully deployed to Data Factory ${{ variables.DataFactoryName }} in Resource Group ${{ parameters.ResourceGroupName }}"
+
+
+
+# - task: AzureResourceManagerTemplateDeployment@3
+#   displayName: "Deploy ADF ARM Template"
+#   inputs:
+#     deploymentScope: "Resource Group"
+#     azureResourceManagerConnection: "${{ parameters.AzureResourceManagerConnection }}"
+#     ${{ if eq(parameters.Environment, 'UAT') }}:
+#       subscriptionId: "$(UATSubscriptionID)"
+#     ${{ else }}:
+#       subscriptionId: "$(PRODSubscriptionID)"
+#     action: "Create Or Update Resource Group"
+#     resourceGroupName: "${{ parameters.ResourceGroupName }}"
+#     location: "${{ parameters.ResourceGroupLocation }}"
+#     templateLocation: "Linked artifact"
+#     csmFile: "$(Pipeline.Workspace)/ADFArtifact/ARMTemplateForFactory.json"
+#     csmParametersFile: "${{ parameters.DataFactoryTemplateParametersFilePath }}"
+#     deploymentOutputs: "armADFOutputs"
+#     deploymentMode: "Incremental"
 
 - task: AzurePowerShell@5
   displayName: "Cleanup Resource And Start ADF Triggers"
