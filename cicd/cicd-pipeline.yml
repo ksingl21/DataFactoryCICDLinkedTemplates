@@ -91,7 +91,7 @@ stages:
 
           $TemplateSpecResourceID = $(az ts show --name NewARMTemplateV2_master --resource-group rg-adf-cicd-linked-uat --version "1.0.0.0" --query "id")
 
-          Write-Host "Attempting to deploy the master linked Template Spec. Deploying to Data Factory adf-linked-templates-njl-uat"
+          Write-Host "Attempting to deploy the master linked Template Spec. Deploying to Data Factory adf-linked-templates-njl-uat. This may take a couple of mins."
           az deployment group create --resource-group rg-adf-cicd-linked-uat --template-spec $TemplateSpecResourceID --parameters factoryName='adf-linked-templates-njl-uat' --output none
           Write-Host "Successfully deployed to Data Factory adf-linked-templates-njl-uat"
 
