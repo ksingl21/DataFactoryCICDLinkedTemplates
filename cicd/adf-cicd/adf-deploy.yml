@@ -77,7 +77,7 @@ steps:
     targetType: 'filePath'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      Write-Host "Setting the subscription based on the environment."
+      Write-Host "Setting the subscription based on the ${{ parameters.Environment }} environment."
       
       ${{ if eq(parameters.Environment, 'UAT') }}:
         az account set --subscription "$(UATSubscriptionID)"
