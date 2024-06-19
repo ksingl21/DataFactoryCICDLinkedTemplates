@@ -48,14 +48,14 @@ stages:
         targetType: 'filePath'
         scriptLocation: 'scriptPath'
         scriptPath: '$(System.DefaultWorkingDirectory)/cicd/new-linked-template/new-linked-template-create-deploy.ps1'
-        arguments: "-RootFolderPathLinkedARMTemplates '$(Pipeline.Workspace)/ADFArtifact/linkedTemplates' -ResourceGroupName 'rg-adf-cicd-linked-uat'" 
-    
+        arguments: "-RootFolderPathLinkedARMTemplates '$(Pipeline.Workspace)/ADFArtifact/linkedTemplates' -ResourceGroupName 'rg-adf-cicd-linked-uat'"
+     
 
-    - task: CmdLine@2
-      displayName: "List Contents of the Pipeline ADF Artifact Workspace"
-      inputs:
-        script: dir
-        workingDirectory: "$(Pipeline.Workspace)/ADFArtifact/linkedTemplates"
+    # - task: CmdLine@2
+    #   displayName: "List Contents of the Pipeline ADF Artifact Workspace"
+    #   inputs:
+    #     script: dir
+    #     workingDirectory: "$(Pipeline.Workspace)/ADFArtifact/linkedTemplates"
 
     - task: CmdLine@2
       displayName: 'List All Files and directories'
@@ -75,6 +75,18 @@ stages:
           echo "Build.SourcesDirectory:"
 
           echo "$(Build.SourcesDirectory)"
+
+    
+    - task: AzureCLI@2
+      displayName: 'Create Master Linked Template Spec'
+      inputs:
+        azureSubscription: 'DataFactoryCICDAzureResourceManager'
+        scriptType: 'pscore'
+        targetType: 'filePath'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az ts create --name NewARMTemplateV2_master --version "1.0.0.0" --resource-group rg-adf-cicd-linked-uat --location "eastus" --template-file "$(System.DefaultWorkingDirectory)/NewARMTemplateV2_master.json"
+
     
     
     # - task: PowerShell@2

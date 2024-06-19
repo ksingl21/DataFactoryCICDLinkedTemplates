@@ -63,3 +63,5 @@ $LinkedARMTemplateFiles = Get-ChildItem -Path $RootFolderPathLinkedARMTemplates 
         "\\u(?<Value>[a-zA-Z0-9]{4})", {
             param($m) ([char]([int]::Parse($m.Groups['Value'].Value,
                 [System.Globalization.NumberStyles]::HexNumber))).ToString() } )} |  Set-Content 'NewARMTemplateV2_master.json' # -Path '$RootFolderPathLinkedARMTemplates'
+
+    Write-Host "Successfully created the NewARMTemplateV2_master.json file"
