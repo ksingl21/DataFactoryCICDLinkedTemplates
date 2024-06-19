@@ -57,4 +57,4 @@ $Files = Get-ChildItem -Path $RootFolderPathLinkedARMTemplates -Exclude *master*
     [Regex]::Replace($_, 
         "\\u(?<Value>[a-zA-Z0-9]{4})", {
             param($m) ([char]([int]::Parse($m.Groups['Value'].Value,
-                [System.Globalization.NumberStyles]::HexNumber))).ToString() } )} |  Set-Content 'NewARMTemplateV2_master.json' -Path '$RootFolderPathLinkedARMTemplates'
+                [System.Globalization.NumberStyles]::HexNumber))).ToString() } )} |  Set-Content 'NewARMTemplateV2_master.json' # -Path '$RootFolderPathLinkedARMTemplates'
