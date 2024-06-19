@@ -1,5 +1,13 @@
 {
 	"name": "adf-linked-templates-njl",
+	"properties": {
+		"globalParameters": {
+			"testglobal": {
+				"type": "int",
+				"value": 1
+			}
+		}
+	},
 	"location": "eastus",
 	"identity": {
 		"type": "SystemAssigned",
