@@ -90,7 +90,7 @@ steps:
 
       Write-Host "Successfully retrieved the resource ID for the new master Template Spec ${{ parameters.TemplateSpecMasterName }}"
 
-      Write-Host "Attempting to deploy the master linked Template Spec to Data Factory ${{ parameters.DataFactoryName }}. This may take a couple of mins."
+      Write-Host "Attempting to deploy the master linked Template Spec to Data Factory ${{ parameters.DataFactoryName }}. This may take a couple of minutes."
       az deployment group create --name 'ArmTemplate_master_${{ parameters.TemplateSpecMasterName }}'--resource-group '${{ parameters.ResourceGroupName }}' --template-spec $TemplateSpecResourceID --parameters '${{ parameters.DataFactoryTemplateParametersFilePath }}' --output none
       Write-Host "Successfully deployed to Data Factory ${{ parameters.DataFactoryName }} in Resource Group ${{ parameters.ResourceGroupName }}"
 
