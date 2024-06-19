@@ -41,6 +41,7 @@ stages:
     #     workingDirectory: "$(Pipeline.Workspace)/ADFArtifact"
 
     - task: AzureCLI@2
+      displayName: 'Create Linked Template Specs'
       inputs:
         azureSubscription: 'DataFactoryCICDAzureResourceManager'
         scriptType: 'pscore'
