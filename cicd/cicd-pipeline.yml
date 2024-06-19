@@ -89,7 +89,7 @@ stages:
 
           $TemplateSpecResourceID = $(az ts show --name NewARMTemplateV2_master --resource-group rg-adf-cicd-linked-uat --version "1.0.0.0" --query "id")
 
-          az deployment group create --resource-group rg-adf-cicd-linked-uat --template-spec $TemplateSpecResourceID --output none
+          az deployment group create --resource-group rg-adf-cicd-linked-uat --template-spec $TemplateSpecResourceID --parameters factoryName='adf-linked-templates-njl-uat' --output none
 
 
 
