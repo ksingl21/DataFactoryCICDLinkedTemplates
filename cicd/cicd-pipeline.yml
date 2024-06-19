@@ -101,7 +101,7 @@ stages:
           Write-Host "Attempting to retrieve the resource ID for the new ARMTemplateV2_master Template Spec"
           $TemplateSpecResourceID = $(az ts show --name NewARMTemplateV2_master --resource-group rg-adf-cicd-linked-uat --version "1.0.0.0" --query "id")
 
-          Write-Host "Successfully retrieved the resource ID for the new master Spec Template"
+          Write-Host "Successfully retrieved the resource ID for the new master Template Spec"
 
           Write-Host "Attempting to deploy the master linked Template Spec to Data Factory ${{ variables.DataFactoryName }}. This may take a couple of mins."
           az deployment group create --resource-group rg-adf-cicd-linked-uat --template-spec $TemplateSpecResourceID --parameters factoryName='adf-linked-templates-njl-uat' --output none
