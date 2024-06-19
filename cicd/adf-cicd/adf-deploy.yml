@@ -79,7 +79,7 @@ steps:
     inlineScript: |
       Write-Host "Setting the subscription based on the ${{ parameters.Environment }} environment."
       
-      if(${{ parameters.Environment }} -eq 'UAT'){
+      if('${{ parameters.Environment }}' -eq 'UAT'){
         az account set --subscription "$(UATSubscriptionID)"
       }else {
         az account set --subscription "$(PRODSubscriptionID)"
