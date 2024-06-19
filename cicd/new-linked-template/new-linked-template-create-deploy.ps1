@@ -45,10 +45,10 @@ $LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -
     
     foreach ($item in $MasterARMTemplateFile.resources) {
 
-    $ResourceName = $item.Name -Match 'ArmTemplate_.*' # Extracts the Arm Template name out of the resource name property. Ex: my-datafactory-name_ArmTemplate_0 returns ArmTemplate_0
+    $ResourceName = $item.Name -Match 'ArmTemplate_.*' # Extracts the ARM Template name out of the resource name property. Ex: my-datafactory-name_ArmTemplate_0 returns ArmTemplate_0
     $TemplateSpecExtractedName = $matches[0] # $matches is an automatic variable in PowerShell. https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_automatic_variables?view=powershell-7.4#matches
 
-    $TemplateSpecResourceID = $(az ts show --name $TemplateSpecExtractedName --resource-group $DeployTemplateSpecsResourceGroupName --version "1.0.0.0" --query "id")
+    $TemplateSpecResourceID = $(az ts show --name $TemplateSpecExtractedName --resource-group $DeployTemplateSpecsResourceGroupName --version $TemplateSpecsVersionNumber --query "id")
 
     $item.properties.templateLink | Add-Member -Name "id" -value $TemplateSpecResourceID.replace("`"","") -MemberType NoteProperty # removes the initial and ending double quotes from the string
     ($item.properties.templateLink).PSObject.Properties.Remove('uri')
