@@ -2,6 +2,7 @@
 # https://dev.to/adbertram/running-powershell-scripts-in-azure-devops-pipelines-2-of-2-3j0e
 # https://stackoverflow.com/questions/47779157/convertto-json-and-convertfrom-json-with-special-characters
 # https://learn.microsoft.com/en-us/cli/azure/delete-azure-resources-at-scale#delete-all-azure-resources-of-a-type
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_automatic_variables?view=powershell-7.4#matches
 
 
 # Defining parameters for the script
@@ -27,13 +28,14 @@ $LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -
       # Create a new Template Spec for each ARM Template. Doesn't update the ARM Template at all
       Write-Host "Attempting to create a new Template Spec for linked ARM template $TemplateSpecName.json"
       az ts create --name $TemplateSpecName --version $TemplateSpecsVersionNumber --resource-group $DeployTemplateSpecsResourceGroupName --location $DeployTemplateSpecsResourceGroupLocation `
-        --template-file $FolderPathADFLinkedARMTemplates/$FileName --yes --output none # --yes means don't prompt for confirmation and overwrite the existing Template Spec if it exists. Can remove if you don't want to override the Template Spec 
+        --template-file $FolderPathADFLinkedARMTemplates/$FileName --yes --output none # --yes means don't prompt for confirmation and overwrite the existing Template Spec if it exists
       
       Write-Host "Successfully created a new Template Spec called $TemplateSpecName for linked ARM template $TemplateSpecName.json"
       Write-Host `n
     }
 
     Write-Host "Successfully created all necessary Template Specs in Resource Group $DeployTemplateSpecsResourceGroupName"
+    Write-Host `n
 
     Write-Host "Attempting to read the ArmTemplate_master.json file"
     $MasterARMTemplateFile = Get-Content $FolderPathADFLinkedARMTemplates/ArmTemplate_master.json -Raw | ConvertFrom-Json
@@ -54,6 +56,7 @@ $LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -
     ($item.properties.templateLink).PSObject.Properties.Remove('uri')
     ($item.properties.templateLink).PSObject.Properties.Remove('contentVersion')
 
+    # Updates the API version to one that can use the TemplateSpec ID
     $item.apiVersion = '2019-11-01'
     }
 
