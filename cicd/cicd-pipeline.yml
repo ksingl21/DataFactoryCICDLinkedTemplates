@@ -126,15 +126,15 @@ stages:
     
     
     
-    - template: adf-cicd/adf-deploy.yml
-      parameters:
-        AzureResourceManagerConnection: "${{ variables.AzureResourceManagerConnection }}"
-        DataFactoryName: "${{ variables.DataFactoryName }}"
-        DataFactoryTemplateParametersFilePath: "${{ variables.DataFactoryTemplateParametersFilePath }}"
-        ResourceGroupName: "${{ variables.ADFResourceGroupName }}"
-        ResourceGroupLocation: "${{ variables.ResourceGroupLocation }}"
-        ADFArtifactName: "${{ variables.ADFArtifactName }}"
-        Environment: "${{ variables.Environment }}"
+    # - template: adf-cicd/adf-deploy.yml
+    #   parameters:
+    #     AzureResourceManagerConnection: "${{ variables.AzureResourceManagerConnection }}"
+    #     DataFactoryName: "${{ variables.DataFactoryName }}"
+    #     DataFactoryTemplateParametersFilePath: "${{ variables.DataFactoryTemplateParametersFilePath }}"
+    #     ResourceGroupName: "${{ variables.ADFResourceGroupName }}"
+    #     ResourceGroupLocation: "${{ variables.ResourceGroupLocation }}"
+    #     ADFArtifactName: "${{ variables.ADFArtifactName }}"
+    #     Environment: "${{ variables.Environment }}"
 
 # # DEPLOY TO PROD
 # - stage: DeployToPROD
