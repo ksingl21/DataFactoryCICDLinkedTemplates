@@ -40,11 +40,21 @@ stages:
         script: dir
         workingDirectory: "$(Pipeline.Workspace)/ADFArtifact"
 
-    - task: PowerShell@2
+    - task: AzureCLI@2
       inputs:
+        azureSubscription: 'DataFactoryCICDAzureResourceManager'
+        scriptType: 'pscore'
         targetType: 'filePath'
-        filePath: '$(System.DefaultWorkingDirectory)/cicd/new-linked-template/new-linked-template-create-deploy.ps1'
+        scriptLocation: 'scriptPath'
+        scriptPath: '$(System.DefaultWorkingDirectory)/cicd/new-linked-template/new-linked-template-create-deploy.ps1'
         arguments: "-RootFolderPathLinkedARMTemplates '$(Pipeline.Workspace)/ADFArtifact/linkedTemplates' -ResourceGroupName 'rg-adf-cicd-linked-uat'" 
+    
+    
+    # - task: PowerShell@2
+    #   inputs:
+    #     targetType: 'filePath'
+    #     filePath: '$(System.DefaultWorkingDirectory)/cicd/new-linked-template/new-linked-template-create-deploy.ps1'
+    #     arguments: "-RootFolderPathLinkedARMTemplates '$(Pipeline.Workspace)/ADFArtifact/linkedTemplates' -ResourceGroupName 'rg-adf-cicd-linked-uat'" 
 
 
 
