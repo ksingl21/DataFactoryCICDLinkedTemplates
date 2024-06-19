@@ -21,7 +21,7 @@ $LinkedARMTemplateFiles = Get-ChildItem -Path $RootFolderPathLinkedARMTemplates 
       Write-Host `n
 
       Write-Host "Attempting to create a new template spec for linked ARM template $TemplateSpecName.json"
-      az ts create --name $TemplateSpecName --version "1.0.0.0" --resource-group $ResourceGroupName --location 'eastus' --template-file $RootFolderPathLinkedARMTemplates/$FileName --yes true --output none
+      az ts create --name $TemplateSpecName --version "1.0.0.0" --resource-group $ResourceGroupName --location 'eastus' --template-file $RootFolderPathLinkedARMTemplates/$FileName --yes --output none
       Write-Host `n
 
       Write-Host "Successfully created a new template space for linked ARM template $TemplateSpecName.json"
