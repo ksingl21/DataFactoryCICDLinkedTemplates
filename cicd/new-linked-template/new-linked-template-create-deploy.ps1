@@ -45,9 +45,9 @@ $Files = Get-ChildItem -Path $RootFolderPathLinkedARMTemplates -Exclude *master*
     }
 
     Write-Host "Attempting to output the new Master.json file"
-    
+
     $ArmTemplateMasterFile | ConvertTo-Json -Depth 15 | %{
     [Regex]::Replace($_, 
         "\\u(?<Value>[a-zA-Z0-9]{4})", {
             param($m) ([char]([int]::Parse($m.Groups['Value'].Value,
-                [System.Globalization.NumberStyles]::HexNumber))).ToString() } )} |  Set-Content 'NewARMTemplateV2_master.json'
+                [System.Globalization.NumberStyles]::HexNumber))).ToString() } )} |  Set-Content 'NewARMTemplateV2_master.json' -Path '$RootFolderPathLinkedARMTemplates'

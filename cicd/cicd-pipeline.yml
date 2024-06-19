@@ -34,11 +34,11 @@ stages:
         targetpath: "$(Pipeline.Workspace)/ADFArtifact"
     
     
-    - task: CmdLine@2
-      displayName: "List Contents of the Pipeline ADF Artifact Workspace"
-      inputs:
-        script: dir
-        workingDirectory: "$(Pipeline.Workspace)/ADFArtifact"
+    # - task: CmdLine@2
+    #   displayName: "List Contents of the Pipeline ADF Artifact Workspace"
+    #   inputs:
+    #     script: dir
+    #     workingDirectory: "$(Pipeline.Workspace)/ADFArtifact"
 
     - task: AzureCLI@2
       inputs:
@@ -48,6 +48,13 @@ stages:
         scriptLocation: 'scriptPath'
         scriptPath: '$(System.DefaultWorkingDirectory)/cicd/new-linked-template/new-linked-template-create-deploy.ps1'
         arguments: "-RootFolderPathLinkedARMTemplates '$(Pipeline.Workspace)/ADFArtifact/linkedTemplates' -ResourceGroupName 'rg-adf-cicd-linked-uat'" 
+    
+
+    - task: CmdLine@2
+      displayName: "List Contents of the Pipeline ADF Artifact Workspace"
+      inputs:
+        script: dir
+        workingDirectory: "$(Pipeline.Workspace)/ADFArtifact/linkedTemplates"
     
     
     # - task: PowerShell@2
