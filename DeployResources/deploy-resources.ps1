@@ -33,9 +33,9 @@ $GitHubRepoRootFolderName = '/'
 
 
 # # Create the DEV, UAT, PROD resource group names
-# az group create --name $DEVResourceGroupName --location $Location # DEV
-# az group create --name $UATResourceGroupName --location $Location # UAT
-# az group create --name $PRODResourceGroupName --location $Location # PROD
+az group create --name $DEVResourceGroupName --location $Location # DEV
+az group create --name $UATResourceGroupName --location $Location # UAT
+az group create --name $PRODResourceGroupName --location $Location # PROD
 
 
 # # Create a Data Factory

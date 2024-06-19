@@ -34,10 +34,6 @@ variables:
 - name: TemplateSpecMasterVersionNumber # Version number for the Template Specs. Ex: 1.0.0.0 Ex2: 1.0.0.1 etc.
   value: "1.0.0.0"
 
-# - name: OutputFolderPathNewADFMasterARMTemplate
-#   value: "$(Build.Repository.LocalPath)"
-
-
 # Shared
 - name: ResourceGroupLocation
   value: "East US"

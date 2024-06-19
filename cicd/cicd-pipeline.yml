@@ -51,7 +51,6 @@ stages:
                     -OutputFolderPathNewADFMasterARMTemplate  '${{ variables.WorkingDirectory }}'"
                     # FolderPathADFLinkedARMTemplates is where the pipeline stores the Data Factory (ADF) linked ARM Templates
      
-    
 # DEPLOY TO UAT
 - stage: DeployToUAT
   dependsOn: BuildDEVDataFactory
@@ -62,21 +61,65 @@ stages:
   - template: variables/uat-variables.yml
 
   jobs:
-  # - job: DeployAzureResources
-  #   displayName: "Deploy Azure Resources Via Bicep"
-  #   steps:
-  #   - template: azure-resources/deploy-azure-resources.yml
-  #     parameters:
-  #       AzureResourceManagerConnection: "${{ variables.AzureResourceManagerConnection }}"
-  #       DataFactoryName: "${{ variables.DataFactoryName }}"
-  #       ADFResourceGroupName: "${{ variables.ADFResourceGroupName }}"
-  #       ADFBicepTemplateFilePath: "${{ variables.ADFBicepTemplateFilePath }}"
+  - job: DeployAzureResources
+    displayName: "Deploy Azure Resources Via Bicep"
+    steps:
+    - template: azure-resources/deploy-azure-resources.yml
+      parameters:
+        AzureResourceManagerConnection: "${{ variables.AzureResourceManagerConnection }}"
+        DataFactoryName: "${{ variables.DataFactoryName }}"
+        ADFResourceGroupName: "${{ variables.ADFResourceGroupName }}"
+        ADFBicepTemplateFilePath: "${{ variables.ADFBicepTemplateFilePath }}"
       
 
   - job: DeployDataFactory
     displayName: "Deploy ADF Using Linked Template Specs To Target ADF"
-    # dependsOn: DeployAzureResources
-    # condition: succeeded()
+    dependsOn: DeployAzureResources
+    condition: succeeded()
+    steps:
+    - template: adf-cicd/adf-deploy.yml
+      parameters:
+        AzureResourceManagerConnection: "${{ variables.AzureResourceManagerConnection }}"
+        DataFactoryName: "${{ variables.DataFactoryName }}"
+        DataFactoryTemplateParametersFilePath: "${{ variables.DataFactoryTemplateParametersFilePath }}"
+        ResourceGroupName: "${{ variables.ADFResourceGroupName }}"
+        ResourceGroupLocation: "${{ variables.ResourceGroupLocation }}"
+        ADFArtifactName: "${{ variables.ADFArtifactName }}"
+        Environment: "${{ variables.Environment }}"
+        # ADF Linked Template Variables
+        TemplateSpecsResourceGroupName: "${{ variables.TemplateSpecsResourceGroupName }}"
+        TemplateSpecsResourceGroupLocation: "${{ variables.TemplateSpecsResourceGroupLocation }}"
+        TemplateSpecMasterName: "${{ variables.TemplateSpecMasterName }}"
+        TemplateSpecMasterVersionNumber: "${{ variables.TemplateSpecMasterVersionNumber }}"
+
+
+# DEPLOY TO PROD
+- stage: DeployToPROD
+  dependsOn: 
+    - BuildDEVDataFactory
+    - DeployToUAT 
+  condition: succeeded()
+  displayName: "Deploy To PROD"
+
+  variables:
+  - template: variables/prod-variables.yml
+
+  jobs:  
+  - job: DeployAzureResources
+    displayName: "Deploy Azure Resources Via Bicep"
+    steps:
+    - template: azure-resources/deploy-azure-resources.yml
+      parameters:
+        AzureResourceManagerConnection: "${{ variables.AzureResourceManagerConnection }}"
+        DataFactoryName: "${{ variables.DataFactoryName }}"
+        ADFResourceGroupName: "${{ variables.ADFResourceGroupName }}"
+        ADFBicepTemplateFilePath: "${{ variables.ADFBicepTemplateFilePath }}"
+
+
+  - job: DeployDataFactory
+    displayName: "Deploy ADF ARM Template To Target ADF"
+    dependsOn: DeployAzureResources
+    condition: succeeded()
     steps:
     - template: adf-cicd/adf-deploy.yml
       parameters:
@@ -95,85 +138,19 @@ stages:
 
 
 
-  # - job: DeployDataFactory
-  #   displayName: "Deploy ADF ARM Template To Target ADF"
-  #   dependsOn: DeployAzureResources
-  #   condition: succeeded()
-  #   steps:
-  #   - task: AzureCLI@2
-  #     displayName: 'Deploy To UAT ADF'
-  #     inputs:
-  #       azureSubscription: 'DataFactoryCICDAzureResourceManager'
-  #       scriptType: 'pscore'
-  #       targetType: 'filePath'
-  #       scriptLocation: 'inlineScript'
-  #       inlineScript: |
-  #         Write-Host "Attempting to retrieve the resource ID for the new ARMTemplateV2_master Template Spec"
-  #         $TemplateSpecResourceID = $(az ts show --name NewARMTemplateV2_master --resource-group ${{ variables.TemplateSpecsResourceGroupName }} --version "1.0.0.0" --query "id")
-
-  #         Write-Host "Successfully retrieved the resource ID for the new master Template Spec"
-
-  #         Write-Host "Attempting to deploy the master linked Template Spec to Data Factory ${{ variables.DataFactoryName }}. This may take a couple of mins."
-  #         az deployment group create --resource-group '${{ variables.ADFResourceGroupName }}' --template-spec $TemplateSpecResourceID --parameters factoryName='adf-linked-templates-njl-uat' --output none
-  #         Write-Host "Successfully deployed to Data Factory ${{ variables.DataFactoryName }} in Resource Group ${{ variables.ADFResourceGroupName }}"
-
-    
     # Uncomment this task if you want to delete all of the Template Specs that were created.
-    # - task: AzureCLI@2
-    #   displayName: 'Optionally Delete All of the Template Specs'
-    #   inputs:
-    #     azureSubscription: 'DataFactoryCICDAzureResourceManager'
-    #     scriptType: 'pscore'
-    #     targetType: 'filePath'
-    #     scriptLocation: 'inlineScript'
-    #     inlineScript: |
-    #       Write-Host "Attempting to delete all of the Template Specs"
-    #       az group delete -name rg-adf-cicd-linked-uat --force-deletion-types Microsoft.Resources/templateSpecs --yes
+    - task: AzureCLI@2
+      displayName: 'Optionally Delete All of the Template Specs'
+      inputs:
+        azureSubscription: 'DataFactoryCICDAzureResourceManager'
+        scriptType: 'pscore'
+        targetType: 'filePath'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          Write-Host "Attempting to delete all of the Template Specs from Resource Group ${{ variables.TemplateSpecsResourceGroupName }}"
+          az group delete -name "${{ variables.TemplateSpecsResourceGroupName }}" --force-deletion-types Microsoft.Resources/templateSpecs --yes
 
-    #       Write-Host "Successfully deleted all of the Template Specs"
-
-
-# # DEPLOY TO PROD
-# - stage: DeployToPROD
-#   dependsOn: 
-#     - BuildDEVDataFactory
-#     - DeployToUAT 
-#   condition: succeeded()
-#   displayName: "Deploy To PROD"
-
-#   variables:
-#   - template: variables/prod-variables.yml
-
-#   jobs:  
-  # - job: DeployAzureResources
-  #   displayName: "Deploy Azure Resources Via Bicep"
-  #   steps:
-  #   - template: azure-resources/deploy-azure-resources.yml
-  #     parameters:
-  #       AzureResourceManagerConnection: "${{ variables.AzureResourceManagerConnection }}"
-  #       DataFactoryName: "${{ variables.DataFactoryName }}"
-  #       ADFResourceGroupName: "${{ variables.ADFResourceGroupName }}"
-  #       ADFBicepTemplateFilePath: "${{ variables.ADFBicepTemplateFilePath }}"
-
-
-#   - job: DeployDataFactory
-#     displayName: "Deploy ADF ARM Template To Target ADF"
-#     dependsOn: DeployAzureResources
-#     condition: succeeded()
-#     steps:
-#     - template: adf-cicd/adf-deploy.yml
-#       parameters:
-#         AzureResourceManagerConnection: "${{ variables.AzureResourceManagerConnection }}"
-#         DataFactoryName: "${{ variables.DataFactoryName }}"
-#         DataFactoryTemplateParametersFilePath: "${{ variables.DataFactoryTemplateParametersFilePath }}"
-#         ResourceGroupName: "${{ variables.ADFResourceGroupName }}"
-#         ResourceGroupLocation: "${{ variables.ResourceGroupLocation }}"
-#         ADFArtifactName: "${{ variables.ADFArtifactName }}"
-#         Environment: "${{ variables.Environment }}"
-
-
-
-
+          Write-Host "Successfully deleted all of the Template Specs from Resource Group ${{ variables.TemplateSpecsResourceGroupName }}"
 
 
 
