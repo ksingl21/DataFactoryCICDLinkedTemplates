@@ -55,6 +55,25 @@ stages:
       inputs:
         script: dir
         workingDirectory: "$(Pipeline.Workspace)/ADFArtifact/linkedTemplates"
+
+    - task: CmdLine@2
+      displayName: 'List All Files and directories'
+      inputs:
+        script: |
+          echo "Structure of work folder of this pipeline:"
+          tree $(Agent.WorkFolder)\1 /f
+
+          echo "Build.ArtifactStagingDirectory:" 
+
+          echo "$(Build.ArtifactStagingDirectory)"
+
+          echo "Build.BinariesDirectory:" 
+
+          echo "$(Build.BinariesDirectory)"
+
+          echo "Build.SourcesDirectory:"
+
+          echo "$(Build.SourcesDirectory)"
     
     
     # - task: PowerShell@2
