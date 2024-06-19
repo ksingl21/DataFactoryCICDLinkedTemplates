@@ -15,7 +15,7 @@ $Files = Get-ChildItem -Path $RootFolderPathLinkedARMTemplates -Exclude *master*
     
       $TemplateSpecName = $FileName.split('.')[0]
     
-      az ts create --name $TemplateSpecName --version "1.0.0.0" --resource-group $ResourceGroupName --location 'eastus' --template-file $RootFolderPathLinkedARMTemplates/$FileName 
+      az ts create --name $TemplateSpecName --version "1.0.0.0" --resource-group $ResourceGroupName --location 'eastus' --template-file $RootFolderPathLinkedARMTemplates/$FileName --output none
     }
 
     $ArmTemplateMasterFile = GET-CONTENT $RootFolderPathLinkedARMTemplates/ArmTemplate_master.json -Raw | ConvertFrom-Json
@@ -44,7 +44,8 @@ $Files = Get-ChildItem -Path $RootFolderPathLinkedARMTemplates -Exclude *master*
     # Write-Host $item.properties
     }
 
-
+    Write-Host "Attempting to output the new Master.json file"
+    
     $ArmTemplateMasterFile | ConvertTo-Json -Depth 15 | %{
     [Regex]::Replace($_, 
         "\\u(?<Value>[a-zA-Z0-9]{4})", {
