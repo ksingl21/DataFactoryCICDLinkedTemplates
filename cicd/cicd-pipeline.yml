@@ -85,11 +85,11 @@ stages:
         targetType: 'filePath'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          az ts create --name NewARMTemplateV2_master --version "1.0.0.0" --resource-group rg-adf-cicd-linked-uat --location "eastus" --template-file "$(System.DefaultWorkingDirectory)/NewARMTemplateV2_master.json"
+          az ts create --name NewARMTemplateV2_master --version "1.0.0.0" --resource-group rg-adf-cicd-linked-uat --location "eastus" --template-file "$(System.DefaultWorkingDirectory)/NewARMTemplateV2_master.json" --output none
 
           $TemplateSpecResourceID = $(az ts show --name NewARMTemplateV2_master --resource-group rg-adf-cicd-linked-uat --version "1.0.0.0" --query "id")
 
-          az deployment group create --resource-group rg-adf-cicd-linked-uat --template-spec $TemplateSpecResourceID
+          az deployment group create --resource-group rg-adf-cicd-linked-uat --template-spec $TemplateSpecResourceID --output none
 
 
 
