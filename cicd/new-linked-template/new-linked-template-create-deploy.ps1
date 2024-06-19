@@ -8,18 +8,25 @@ param(
 )
 
 
-
-$Files = Get-ChildItem -Path $RootFolderPathLinkedARMTemplates -Exclude *master*
+$Files = Get-ChildItem -Path $RootFolderPathLinkedARMTemplates -Exclude *master* # Excludes the master.json and parameters_master.json files
 
     foreach ($FileName in $Files.Name) {
-    
+      
+      # Removes .json from the file name. Ex: ArmTemplate_0.json becomes ArmTemplate_0
       $TemplateSpecName = $FileName.split('.')[0]
-    
+      
+      # Create a new Template Spec for each ARM Template. No need to update the ARM Template at all
+      Write-Host "Attempting to create a new template spec for linked ARM template $TemplateSpecName.json"
       az ts create --name $TemplateSpecName --version "1.0.0.0" --resource-group $ResourceGroupName --location 'eastus' --template-file $RootFolderPathLinkedARMTemplates/$FileName --output none
+      Write-Host "Successfully created a new template space for linked ARM template $TemplateSpecName.json"
     }
 
+    Write-Host "Successfully created all necessary Template Specs in Resource Group $ResourceGroupName"
+
+    Write-Host "Attempting to read the ArmTemplate_master.json file"
     $ArmTemplateMasterFile = GET-CONTENT $RootFolderPathLinkedARMTemplates/ArmTemplate_master.json -Raw | ConvertFrom-Json
 
+    # Remove the containerUri and containerSasToken parameters
     ($ArmTemplateMasterFile.parameters).PSObject.Properties.Remove('containerUri')
     ($ArmTemplateMasterFile.parameters).PSObject.Properties.Remove('containerSasToken')
 
