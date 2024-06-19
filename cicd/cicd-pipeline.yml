@@ -74,8 +74,8 @@ stages:
 
   - job: DeployDataFactory
     displayName: "Deploy ADF Using Linked Template Specs To Target ADF"
-    dependsOn: DeployAzureResources
-    condition: succeeded()
+    # dependsOn: DeployAzureResources
+    # condition: succeeded()
     steps:
     - template: adf-cicd/adf-deploy.yml
       parameters:
