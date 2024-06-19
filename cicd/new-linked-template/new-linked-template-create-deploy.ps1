@@ -11,20 +11,19 @@ param(
 
 $LinkedARMTemplateFiles = Get-ChildItem -Path $RootFolderPathLinkedARMTemplates -Exclude *master* # Excludes the master.json and parameters_master.json files
 
+    Write-Host "Attempting to create the template specs for the linked ARM templates in Resource Group $ResourceGroupName"
+
     foreach ($FileName in $LinkedARMTemplateFiles.Name) {
       
       # Removes .json from the file name. Ex: ArmTemplate_0.json becomes ArmTemplate_0
       $TemplateSpecName = $FileName.split('.')[0]
       
       # Create a new Template Spec for each ARM Template. Doesn't update the ARM Template at all
-      Write-Host "Attempting to create the template specs for the linked ARM template in Resource Group $ResourceGroupName"
-      Write-Host `n
-
       Write-Host "Attempting to create a new template spec for linked ARM template $TemplateSpecName.json"
       az ts create --name $TemplateSpecName --version "1.0.0.0" --resource-group $ResourceGroupName --location 'eastus' --template-file $RootFolderPathLinkedARMTemplates/$FileName --yes --output none
-      Write-Host `n
-
+      
       Write-Host "Successfully created a new template space for linked ARM template $TemplateSpecName.json"
+      Write-Host `n
     }
 
     Write-Host "Successfully created all necessary Template Specs in Resource Group $ResourceGroupName"
