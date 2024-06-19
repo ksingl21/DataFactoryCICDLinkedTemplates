@@ -42,7 +42,7 @@ stages:
         scriptType: 'pscore'
         targetType: 'filePath'
         scriptLocation: 'scriptPath'
-        scriptPath: '${{ variables.WorkingDirectory }}/cicd/new-linked-template/new-linked-template-create-deploy.ps1' # $(System.DefaultWorkingDirectory)/... also works
+        scriptPath: '${{ variables.WorkingDirectory }}/cicd/new-linked-template/new-linked-template-create-deploy.ps1' # $(System.DefaultWorkingDirectory)/cicd/... also works
         arguments: "-FolderPathADFLinkedARMTemplates '$(Pipeline.Workspace)/${{ variables.ADFArtifactName }}/linkedTemplates' -DeployTemplateSpecsResourceGroupName ${{ variables.DeployTemplateSpecsResourceGroupName }}"
         # FolderPathADFLinkedARMTemplates is where the pipeline stores the Data Factory (ADF) linked ARM Templates
      
