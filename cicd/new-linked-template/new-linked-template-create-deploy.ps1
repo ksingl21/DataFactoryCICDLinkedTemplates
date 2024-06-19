@@ -1,6 +1,10 @@
 # Helpful Links:
 # https://dev.to/adbertram/running-powershell-scripts-in-azure-devops-pipelines-2-of-2-3j0e
 # https://stackoverflow.com/questions/47779157/convertto-json-and-convertfrom-json-with-special-characters
+# https://learn.microsoft.com/en-us/cli/azure/delete-azure-resources-at-scale#delete-all-azure-resources-of-a-type
+
+# az group delete -name $rgName --force-deletion-types Microsoft.Resources/templateSpecs --yes
+
 
 
 [CmdletBinding()]

@@ -95,6 +95,21 @@ stages:
           az deployment group create --resource-group rg-adf-cicd-linked-uat --template-spec $TemplateSpecResourceID --parameters factoryName='adf-linked-templates-njl-uat' --output none
           Write-Host "Successfully deployed to Data Factory adf-linked-templates-njl-uat"
 
+    
+    # Uncomment this task if you want to delete all of the Template Specs that were created.
+    # - task: AzureCLI@2
+    #   displayName: 'Optionally Delete All of the Template Specs'
+    #   inputs:
+    #     azureSubscription: 'DataFactoryCICDAzureResourceManager'
+    #     scriptType: 'pscore'
+    #     targetType: 'filePath'
+    #     scriptLocation: 'inlineScript'
+    #     inlineScript: |
+    #       Write-Host "Attempting to delete all of the Template Specs"
+    #       az group delete -name rg-adf-cicd-linked-uat --force-deletion-types Microsoft.Resources/templateSpecs --yes
+
+    #       Write-Host "Successfully deleted all of the Template Specs"
+
 
 
     
