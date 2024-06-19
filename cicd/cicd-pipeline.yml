@@ -138,19 +138,19 @@ stages:
 
 
 
-    # # Uncomment this task if you want to delete all of the Template Specs that were created.
-    # - task: AzureCLI@2
-    #   displayName: 'Optionally Delete All of the Template Specs'
-    #   inputs:
-    #     azureSubscription: 'DataFactoryCICDAzureResourceManager'
-    #     scriptType: 'pscore'
-    #     targetType: 'filePath'
-    #     scriptLocation: 'inlineScript'
-    #     inlineScript: |
-    #       Write-Host "Attempting to delete all of the Template Specs from Resource Group ${{ variables.TemplateSpecsResourceGroupName }}"
-    #       az group delete -name "${{ variables.TemplateSpecsResourceGroupName }}" --force-deletion-types Microsoft.Resources/templateSpecs --yes
+    # Uncomment this task if you want to delete all of the Template Specs that were created.
+    - task: AzureCLI@2
+      displayName: 'Optionally Delete All of the Template Specs'
+      inputs:
+        azureSubscription: 'DataFactoryCICDAzureResourceManager'
+        scriptType: 'pscore'
+        targetType: 'filePath'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          Write-Host "Attempting to delete all of the Template Specs from Resource Group ${{ variables.TemplateSpecsResourceGroupName }}"
+          az group delete -name '${{ variables.TemplateSpecsResourceGroupName }}' --force-deletion-types Microsoft.Resources/templateSpecs --yes
 
-    #       Write-Host "Successfully deleted all of the Template Specs from Resource Group ${{ variables.TemplateSpecsResourceGroupName }}"
+          Write-Host "Successfully deleted all of the Template Specs from Resource Group ${{ variables.TemplateSpecsResourceGroupName }}"
 
 
 
