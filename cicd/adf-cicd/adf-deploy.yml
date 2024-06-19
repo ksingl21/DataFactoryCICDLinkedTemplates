@@ -108,9 +108,3 @@ steps:
       -DataFactoryName "${{ parameters.DataFactoryName }}"
       -predeployment $false
       -deleteDeployment $true
-      
-
-      
-
-
-
