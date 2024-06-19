@@ -14,5 +14,12 @@ variables:
   value: "$(Build.Repository.LocalPath)" # Predefined Azure Pipeline variable that specifies the beginning of the checked out code
 
 
+# Linked ADF ARM Template Deployment Variables
 - name: DeployTemplateSpecsResourceGroupName
   value: rg-adf-cicd-linked-uat
+
+- name: DeployTemplateSpecsResourceGroupLocation
+  value: "eastus"
+
+- name: TemplateSpecsVersionNumber # Version number for the Template Specs. Ex: 1.0.0.0 Ex2: 1.0.0.1 etc.
+  value: "1.0.0.0"

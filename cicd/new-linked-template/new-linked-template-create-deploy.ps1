@@ -8,7 +8,9 @@
 [CmdletBinding()]
 param(
   $FolderPathADFLinkedARMTemplates,
-  $DeployTemplateSpecsResourceGroupName
+  $DeployTemplateSpecsResourceGroupName,
+  $DeployTemplateSpecsResourceGroupLocation,
+  $TemplateSpecsVersionNumber
 )
 
 
@@ -24,7 +26,8 @@ $LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -
       
       # Create a new Template Spec for each ARM Template. Doesn't update the ARM Template at all
       Write-Host "Attempting to create a new Template Spec for linked ARM template $TemplateSpecName.json"
-      az ts create --name $TemplateSpecName --version "1.0.0.0" --resource-group $DeployTemplateSpecsResourceGroupName --location 'eastus' --template-file $FolderPathADFLinkedARMTemplates/$FileName --yes --output none
+      az ts create --name $TemplateSpecName --version $TemplateSpecsVersionNumber --resource-group $DeployTemplateSpecsResourceGroupName --location $DeployTemplateSpecsResourceGroupLocation `
+        --template-file $FolderPathADFLinkedARMTemplates/$FileName --yes --output none # --yes means don't prompt for confirmation and overwrite the existing Template Spec if it exists. Can remove if you don't want to override the Template Spec 
       
       Write-Host "Successfully created a new Template Spec called $TemplateSpecName for linked ARM template $TemplateSpecName.json"
       Write-Host `n
@@ -33,14 +36,14 @@ $LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -
     Write-Host "Successfully created all necessary Template Specs in Resource Group $DeployTemplateSpecsResourceGroupName"
 
     Write-Host "Attempting to read the ArmTemplate_master.json file"
-    $ArmTemplateMasterFile = GET-CONTENT $FolderPathADFLinkedARMTemplates/ArmTemplate_master.json -Raw | ConvertFrom-Json
+    $MasterARMTemplateFile = Get-Content $FolderPathADFLinkedARMTemplates/ArmTemplate_master.json -Raw | ConvertFrom-Json
 
     # Remove the containerUri and containerSasToken parameters
-    ($ArmTemplateMasterFile.parameters).PSObject.Properties.Remove('containerUri')
-    ($ArmTemplateMasterFile.parameters).PSObject.Properties.Remove('containerSasToken')
+    ($MasterARMTemplateFile.parameters).PSObject.Properties.Remove('containerUri')
+    ($MasterARMTemplateFile.parameters).PSObject.Properties.Remove('containerSasToken')
 
     
-    foreach ($item in $ArmTemplateMasterFile.resources) {
+    foreach ($item in $MasterARMTemplateFile.resources) {
 
     $ResourceName = $item.Name -Match 'ArmTemplate_.*' # Extracts the Arm Template name out of the resource name property. Ex: my-datafactory-name_ArmTemplate_0 returns ArmTemplate_0
     $TemplateSpecExtractedName = $matches[0] # $matches is an automatic variable in PowerShell. https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_automatic_variables?view=powershell-7.4#matches
@@ -52,7 +55,6 @@ $LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -
     ($item.properties.templateLink).PSObject.Properties.Remove('contentVersion')
 
     $item.apiVersion = '2019-11-01'
-
     }
 
 
@@ -60,7 +62,7 @@ $LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -
 
     # Ensures the JSON special characters are escaped and come through correctly. For example not returning a \u0027 string value.
     # See https://stackoverflow.com/questions/47779157/convertto-json-and-convertfrom-json-with-special-characters for more details.
-    $ArmTemplateMasterFile | ConvertTo-Json -Depth 15 | %{
+    $MasterARMTemplateFile | ConvertTo-Json -Depth 15 | %{
     [Regex]::Replace($_, 
         "\\u(?<Value>[a-zA-Z0-9]{4})", {
             param($m) ([char]([int]::Parse($m.Groups['Value'].Value,
