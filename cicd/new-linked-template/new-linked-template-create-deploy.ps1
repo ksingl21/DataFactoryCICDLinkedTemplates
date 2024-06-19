@@ -37,7 +37,8 @@ param(
   $FolderPathADFLinkedARMTemplates,
   $DeployTemplateSpecsResourceGroupName,
   $DeployTemplateSpecsResourceGroupLocation,
-  $TemplateSpecsVersionNumber
+  $TemplateSpecsVersionNumber,
+  $OutputFolderPathNewADFMasterARMTemplate
 )
 
 
@@ -95,6 +96,9 @@ $LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -
     [Regex]::Replace($_, 
         "\\u(?<Value>[a-zA-Z0-9]{4})", {
             param($m) ([char]([int]::Parse($m.Groups['Value'].Value,
-                [System.Globalization.NumberStyles]::HexNumber))).ToString() } )} |  Set-Content 'NewARMTemplateV2_master.json'
+                [System.Globalization.NumberStyles]::HexNumber))).ToString() } )} |  Set-Content 'NewARMTemplateV2_master.json' -Path $OutputFolderPathNewADFMasterARMTemplate
 
     Write-Host "Successfully created the NewARMTemplateV2_master.json file"
+    
+    
+
