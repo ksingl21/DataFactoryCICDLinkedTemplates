@@ -45,7 +45,7 @@ param(
 
 $LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -Exclude *master* # Excludes the master.json and parameters_master.json files
 
-    Write-Host "Attempting to create the template specs for the linked ARM templates. Template Spec resources will be deployed in Resource Group $DeployTemplateSpecsResourceGroupName. This may take a couple of minutes."
+    Write-Host "Attempting to create the template specs for the linked ARM templates. Template Spec resources will be deployed in Resource Group $DeployTemplateSpecsResourceGroupName. This may take a few of minutes."
     Write-Host `n
 
     foreach ($FileName in $LinkedARMTemplateFiles.Name) {
