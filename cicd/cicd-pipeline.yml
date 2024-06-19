@@ -47,6 +47,7 @@ stages:
                     -DeployTemplateSpecsResourceGroupName '${{ variables.DeployTemplateSpecsResourceGroupName }}' 
                     -DeployTemplateSpecsResourceGroupLocation '${{ variables.DeployTemplateSpecsResourceGroupLocation }}' 
                     -TemplateSpecsVersionNumber '${{ variables.TemplateSpecsVersionNumber }}'
+                    -TemplateSpecMasterName '${{ variables.TemplateSpecMasterName }}'
                     -OutputFolderPathNewADFMasterARMTemplate  '${{ variables.WorkingDirectory }}'"
                     # FolderPathADFLinkedARMTemplates is where the pipeline stores the Data Factory (ADF) linked ARM Templates
      

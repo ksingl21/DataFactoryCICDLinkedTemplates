@@ -2,10 +2,10 @@
 
 variables: 
 - name: BuildDataFactoryName
-  value: adf-linked-templates-njl
+  value: "adf-linked-templates-njl"
 
 - name: BuildDataFactoryResourceGroupName
-  value: rg-adf-cicd-linked
+  value: "rg-adf-cicd-linked"
 
 - name: ADFArtifactName # Data Factory artifact name created during the adf-build.yml job template
   value: ADFArtifact
@@ -16,13 +16,16 @@ variables:
 
 # Linked ADF ARM Template Deployment Variables
 - name: DeployTemplateSpecsResourceGroupName
-  value: rg-adf-cicd-linked-uat
+  value: "rg-adf-cicd-linked-uat"
 
 - name: DeployTemplateSpecsResourceGroupLocation
   value: "eastus"
 
 - name: TemplateSpecsVersionNumber # Version number for the Template Specs. Ex: 1.0.0.0 Ex2: 1.0.0.1 etc.
   value: "1.0.0.0"
+
+- name: TemplateSpecMasterName # This is the name that will be used when creating the master Template Spec.
+  value: "NewARMTemplateV2_master"
 
 - name: OutputFolderPathNewADFMasterARMTemplate
   value: "$(Build.Repository.LocalPath)"

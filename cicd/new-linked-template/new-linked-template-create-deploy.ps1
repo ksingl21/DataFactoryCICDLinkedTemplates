@@ -38,13 +38,14 @@ param(
   $DeployTemplateSpecsResourceGroupName,
   $DeployTemplateSpecsResourceGroupLocation,
   $TemplateSpecsVersionNumber,
+  $TemplateSpecMasterName,
   $OutputFolderPathNewADFMasterARMTemplate
 )
 
 
 $LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -Exclude *master* # Excludes the master.json and parameters_master.json files
 
-    Write-Host "Attempting to create the template specs for the linked ARM templates. Template Spec resources will be deployed in Resource Group $DeployTemplateSpecsResourceGroupName. This may take a couple of mins."
+    Write-Host "Attempting to create the template specs for the linked ARM templates. Template Spec resources will be deployed in Resource Group $DeployTemplateSpecsResourceGroupName. This may take a couple of minutes."
     Write-Host `n
 
     foreach ($FileName in $LinkedARMTemplateFiles.Name) {
@@ -66,6 +67,7 @@ $LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -
 
     Write-Host "Attempting to read the ArmTemplate_master.json file"
     $MasterARMTemplateFile = Get-Content $FolderPathADFLinkedARMTemplates/ArmTemplate_master.json -Raw | ConvertFrom-Json
+    Write-Host "Successfully read the ArmTemplate_master.json file"
 
     # Remove the containerUri and containerSasToken parameters
     ($MasterARMTemplateFile.parameters).PSObject.Properties.Remove('containerUri')
@@ -98,9 +100,11 @@ $LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -
             param($m) ([char]([int]::Parse($m.Groups['Value'].Value,
                 [System.Globalization.NumberStyles]::HexNumber))).ToString() } )} |  Set-Content 'NewARMTemplateV2_master.json'
 
-    Write-Host "Successfully created the NewARMTemplateV2_master.json file"
+    Write-Host "Successfully created the $TemplateSpecMasterName.json file"
     
-    Write-Host "Attempting to create the Template Spec for the NewARMTemplateV2_master.json file"
-    az ts create --name NewARMTemplateV2_master --version $TemplateSpecsVersionNumber --resource-group $DeployTemplateSpecsResourceGroupName --location $DeployTemplateSpecsResourceGroupLocation `
-      --template-file "$OutputFolderPathNewADFMasterARMTemplate/NewARMTemplateV2_master.json" --output none
+    Write-Host "Attempting to create the Template Spec for the $TemplateSpecMasterName.json file"
+    az ts create --name $TemplateSpecMasterName --version $TemplateSpecsVersionNumber --resource-group $DeployTemplateSpecsResourceGroupName --location $DeployTemplateSpecsResourceGroupLocation `
+      --template-file "$OutputFolderPathNewADFMasterARMTemplate/$TemplateSpecMasterName.json" --output none
+    
+    Write-Host "Successfully created the master Template Spec. Name: $TemplateSpecMasterName in Resource Group $DeployTemplateSpecsResourceGroupName"
 
