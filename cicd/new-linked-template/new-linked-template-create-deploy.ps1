@@ -1,5 +1,6 @@
 # Helpful Links:
 # https://dev.to/adbertram/running-powershell-scripts-in-azure-devops-pipelines-2-of-2-3j0e
+# https://stackoverflow.com/questions/47779157/convertto-json-and-convertfrom-json-with-special-characters
 
 
 [CmdletBinding()]
@@ -11,7 +12,7 @@ param(
 
 $LinkedARMTemplateFiles = Get-ChildItem -Path $RootFolderPathLinkedARMTemplates -Exclude *master* # Excludes the master.json and parameters_master.json files
 
-    Write-Host "Attempting to create the template specs for the linked ARM templates in Resource Group $ResourceGroupName"
+    Write-Host "Attempting to create the template specs for the linked ARM templates. Template Spec resources will be deployed in Resource Group $ResourceGroupName"
 
     foreach ($FileName in $LinkedARMTemplateFiles.Name) {
       
@@ -19,10 +20,10 @@ $LinkedARMTemplateFiles = Get-ChildItem -Path $RootFolderPathLinkedARMTemplates 
       $TemplateSpecName = $FileName.split('.')[0]
       
       # Create a new Template Spec for each ARM Template. Doesn't update the ARM Template at all
-      Write-Host "Attempting to create a new template spec for linked ARM template $TemplateSpecName.json"
+      Write-Host "Attempting to create a new Template Spec for linked ARM template $TemplateSpecName.json"
       az ts create --name $TemplateSpecName --version "1.0.0.0" --resource-group $ResourceGroupName --location 'eastus' --template-file $RootFolderPathLinkedARMTemplates/$FileName --yes --output none
       
-      Write-Host "Successfully created a new template space for linked ARM template $TemplateSpecName.json"
+      Write-Host "Successfully created a new Template Spec called $TemplateSpecName for linked ARM template $TemplateSpecName.json"
       Write-Host `n
     }
 
@@ -58,6 +59,8 @@ $LinkedARMTemplateFiles = Get-ChildItem -Path $RootFolderPathLinkedARMTemplates 
 
     Write-Host "Attempting to output the new Master.json file"
 
+    # Ensures the JSON special characters are escaped and come through correctly. For example not returning a \u0027 string value.
+    # See https://stackoverflow.com/questions/47779157/convertto-json-and-convertfrom-json-with-special-characters for more details.
     $ArmTemplateMasterFile | ConvertTo-Json -Depth 15 | %{
     [Regex]::Replace($_, 
         "\\u(?<Value>[a-zA-Z0-9]{4})", {
