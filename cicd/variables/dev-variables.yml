@@ -12,3 +12,7 @@ variables:
 
 - name: WorkingDirectory
   value: "$(Build.Repository.LocalPath)" # Predefined Azure Pipeline variable that specifies the beginning of the checked out code
+
+
+- name: DeployTemplateSpecsResourceGroupName
+  value: rg-adf-cicd-linked-uat

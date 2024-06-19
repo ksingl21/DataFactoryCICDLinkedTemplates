@@ -26,29 +26,25 @@ stages:
         ADFArtifactName: "${{ variables.ADFArtifactName }}"
         WorkingDirectory: "${{ variables.WorkingDirectory }}"
 
+
     - task: DownloadPipelineArtifact@2
       displayName: "Download The ADF Artifact"
       inputs:
         buildType: "current"
-        artifactName: "ADFArtifact"
-        targetpath: "$(Pipeline.Workspace)/ADFArtifact"
+        artifactName: "${{ variables.ADFArtifactName }}"
+        targetpath: "$(Pipeline.Workspace)/${{ variables.ADFArtifactName }}"
     
-    
-    # - task: CmdLine@2
-    #   displayName: "List Contents of the Pipeline ADF Artifact Workspace"
-    #   inputs:
-    #     script: dir
-    #     workingDirectory: "$(Pipeline.Workspace)/ADFArtifact"
 
     - task: AzureCLI@2
-      displayName: 'Create Linked Template Specs'
+      displayName: 'Create Template Specs for ADF Linked ARM Templates'
       inputs:
         azureSubscription: 'DataFactoryCICDAzureResourceManager'
         scriptType: 'pscore'
         targetType: 'filePath'
         scriptLocation: 'scriptPath'
-        scriptPath: '$(System.DefaultWorkingDirectory)/cicd/new-linked-template/new-linked-template-create-deploy.ps1'
-        arguments: "-RootFolderPathLinkedARMTemplates '$(Pipeline.Workspace)/ADFArtifact/linkedTemplates' -ResourceGroupName 'rg-adf-cicd-linked-uat'"
+        scriptPath: '${{ variables.WorkingDirectory }}/cicd/new-linked-template/new-linked-template-create-deploy.ps1' # $(System.DefaultWorkingDirectory)/... also works
+        arguments: "-FolderPathADFLinkedARMTemplates '$(Pipeline.Workspace)/${{ variables.ADFArtifactName }}/linkedTemplates' -DeployTemplateSpecsResourceGroupName ${{ variables.DeployTemplateSpecsResourceGroupName }}"
+        # FolderPathADFLinkedARMTemplates is where the pipeline stores the Data Factory (ADF) linked ARM Templates
      
 
     # - task: CmdLine@2
