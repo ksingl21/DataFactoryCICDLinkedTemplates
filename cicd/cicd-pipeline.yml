@@ -77,23 +77,23 @@ stages:
           echo "$(Build.SourcesDirectory)"
 
     
-    - task: AzureCLI@2
-      displayName: 'Create Master Linked Template Spec'
-      inputs:
-        azureSubscription: 'DataFactoryCICDAzureResourceManager'
-        scriptType: 'pscore'
-        targetType: 'filePath'
-        scriptLocation: 'inlineScript'
-        inlineScript: |
-          Write-Host "Attempting to create the Template Spec for the NewARMTemplateV2_master.json file"
-          az ts create --name NewARMTemplateV2_master --version "1.0.0.0" --resource-group rg-adf-cicd-linked-uat --location "eastus" --template-file "$(System.DefaultWorkingDirectory)/NewARMTemplateV2_master.json" --output none
-          Write-Host "Successfully created the Template Spec. Name: NewARMTemplateV2_master. Resource Group: rg-adf-cicd-linked-uat"
+    # - task: AzureCLI@2
+    #   displayName: 'Create Master Linked Template Spec'
+    #   inputs:
+    #     azureSubscription: 'DataFactoryCICDAzureResourceManager'
+    #     scriptType: 'pscore'
+    #     targetType: 'filePath'
+    #     scriptLocation: 'inlineScript'
+    #     inlineScript: |
+    #       Write-Host "Attempting to create the Template Spec for the NewARMTemplateV2_master.json file"
+    #       az ts create --name NewARMTemplateV2_master --version "1.0.0.0" --resource-group rg-adf-cicd-linked-uat --location "eastus" --template-file "$(System.DefaultWorkingDirectory)/NewARMTemplateV2_master.json" --output none
+    #       Write-Host "Successfully created the Template Spec. Name: NewARMTemplateV2_master. Resource Group: rg-adf-cicd-linked-uat"
 
-          $TemplateSpecResourceID = $(az ts show --name NewARMTemplateV2_master --resource-group rg-adf-cicd-linked-uat --version "1.0.0.0" --query "id")
+    #       $TemplateSpecResourceID = $(az ts show --name NewARMTemplateV2_master --resource-group rg-adf-cicd-linked-uat --version "1.0.0.0" --query "id")
 
-          Write-Host "Attempting to deploy the master linked Template Spec. Deploying to Data Factory adf-linked-templates-njl-uat. This may take a couple of mins."
-          az deployment group create --resource-group rg-adf-cicd-linked-uat --template-spec $TemplateSpecResourceID --parameters factoryName='adf-linked-templates-njl-uat' --output none
-          Write-Host "Successfully deployed to Data Factory adf-linked-templates-njl-uat"
+    #       Write-Host "Attempting to deploy the master linked Template Spec. Deploying to Data Factory adf-linked-templates-njl-uat. This may take a couple of mins."
+    #       az deployment group create --resource-group rg-adf-cicd-linked-uat --template-spec $TemplateSpecResourceID --parameters factoryName='adf-linked-templates-njl-uat' --output none
+    #       Write-Host "Successfully deployed to Data Factory adf-linked-templates-njl-uat"
 
     
     # Uncomment this task if you want to delete all of the Template Specs that were created.
