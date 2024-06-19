@@ -7,7 +7,7 @@
 
 
 <#
-PowerShell script can be used to deploy Data Factory (ADF) via linked templates in a more secure way instead of using a Storage Account and SAS token. Use linked templates when the Data Factory ARM template is over 4MB.
+PowerShell script can be used to deploy Data Factory (ADF) via linked templates in a more secure way instead of using a Storage Account and SAS token. Use linked templates when the Data Factory ARM template is over 4 MB.
 Original linked template ADF approach for context: https://learn.microsoft.com/en-us/azure/data-factory/continuous-integration-delivery-linked-templates
 ARM Template limits: https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/best-practices#template-limits
 
@@ -96,7 +96,7 @@ $LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -
     [Regex]::Replace($_, 
         "\\u(?<Value>[a-zA-Z0-9]{4})", {
             param($m) ([char]([int]::Parse($m.Groups['Value'].Value,
-                [System.Globalization.NumberStyles]::HexNumber))).ToString() } )} |  Set-Content 'NewARMTemplateV2_master.json' -Path $OutputFolderPathNewADFMasterARMTemplate
+                [System.Globalization.NumberStyles]::HexNumber))).ToString() } )} |  Set-Content 'NewARMTemplateV2_master.json'
 
     Write-Host "Successfully created the NewARMTemplateV2_master.json file"
     
