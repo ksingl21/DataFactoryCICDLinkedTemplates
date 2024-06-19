@@ -16,11 +16,13 @@ $Files = Get-ChildItem -Path $RootFolderPathLinkedARMTemplates -Exclude *master*
       $TemplateSpecName = $FileName.split('.')[0]
       
       # Create a new Template Spec for each ARM Template. No need to update the ARM Template at all
+      Write-Host "Attempting to create the template specs for the linked ARM template in Resource Group $ResourceGroupName"
+      Write-Host `n
+
       Write-Host "Attempting to create a new template spec for linked ARM template $TemplateSpecName.json"
       az ts create --name $TemplateSpecName --version "1.0.0.0" --resource-group $ResourceGroupName --location 'eastus' --template-file $RootFolderPathLinkedARMTemplates/$FileName --output none
-      
       Write-Host `n
-      
+
       Write-Host "Successfully created a new template space for linked ARM template $TemplateSpecName.json"
     }
 
