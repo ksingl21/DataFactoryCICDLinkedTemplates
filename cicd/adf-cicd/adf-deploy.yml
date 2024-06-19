@@ -80,9 +80,9 @@ steps:
       Write-Host "Setting the subscription based on the ${{ parameters.Environment }} environment."
       
       if('${{ parameters.Environment }}' -eq 'UAT'){
-        az account set --subscription "$(UATSubscriptionID)"
+        az account set --subscription '$(UATSubscriptionID)'
       }else {
-        az account set --subscription "$(PRODSubscriptionID)"
+        az account set --subscription '$(PRODSubscriptionID)'
       }
       
       Write-Host "Attempting to retrieve the resource ID for the new ${{ parameters.TemplateSpecMasterName }} Template Spec"
