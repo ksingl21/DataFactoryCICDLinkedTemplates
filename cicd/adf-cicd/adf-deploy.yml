@@ -92,7 +92,7 @@ steps:
 
       Write-Host "Attempting to deploy the master linked Template Spec to Data Factory ${{ parameters.DataFactoryName }}. This may take a couple of mins."
       az deployment group create --resource-group '${{ parameters.ResourceGroupName }}' --template-spec $TemplateSpecResourceID --parameters '${{ parameters.DataFactoryTemplateParametersFilePath }}' --output none
-      Write-Host "Successfully deployed to Data Factory ${{ variables.DataFactoryName }} in Resource Group ${{ parameters.ResourceGroupName }}"
+      Write-Host "Successfully deployed to Data Factory ${{ parameters.DataFactoryName }} in Resource Group ${{ parameters.ResourceGroupName }}"
 
 
 
