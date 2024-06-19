@@ -13,6 +13,7 @@ param(
 $LinkedARMTemplateFiles = Get-ChildItem -Path $RootFolderPathLinkedARMTemplates -Exclude *master* # Excludes the master.json and parameters_master.json files
 
     Write-Host "Attempting to create the template specs for the linked ARM templates. Template Spec resources will be deployed in Resource Group $ResourceGroupName"
+    Write-Host `n
 
     foreach ($FileName in $LinkedARMTemplateFiles.Name) {
       
