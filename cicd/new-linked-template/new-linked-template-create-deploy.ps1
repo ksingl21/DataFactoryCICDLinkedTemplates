@@ -100,5 +100,7 @@ $LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -
 
     Write-Host "Successfully created the NewARMTemplateV2_master.json file"
     
-    
+    Write-Host "Attempting to create the Template Spec for the NewARMTemplateV2_master.json file"
+    az ts create --name NewARMTemplateV2_master --version $TemplateSpecsVersionNumber --resource-group $DeployTemplateSpecsResourceGroupName --location $DeployTemplateSpecsResourceGroupLocation `
+      --template-file "$OutputFolderPathNewADFMasterARMTemplate/NewARMTemplateV2_master.json" --output none
 
