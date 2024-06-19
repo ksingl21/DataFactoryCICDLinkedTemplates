@@ -1,6 +1,7 @@
 # Helpful Links:
 # https://dev.to/adbertram/running-powershell-scripts-in-azure-devops-pipelines-2-of-2-3j0e
 
+
 [CmdletBinding()]
 param(
   $RootFolderPathLinkedARMTemplates,
@@ -8,14 +9,14 @@ param(
 )
 
 
-$Files = Get-ChildItem -Path $RootFolderPathLinkedARMTemplates -Exclude *master* # Excludes the master.json and parameters_master.json files
+$LinkedARMTemplateFiles = Get-ChildItem -Path $RootFolderPathLinkedARMTemplates -Exclude *master* # Excludes the master.json and parameters_master.json files
 
-    foreach ($FileName in $Files.Name) {
+    foreach ($FileName in $LinkedARMTemplateFiles.Name) {
       
       # Removes .json from the file name. Ex: ArmTemplate_0.json becomes ArmTemplate_0
       $TemplateSpecName = $FileName.split('.')[0]
       
-      # Create a new Template Spec for each ARM Template. No need to update the ARM Template at all
+      # Create a new Template Spec for each ARM Template. Doesn't update the ARM Template at all
       Write-Host "Attempting to create the template specs for the linked ARM template in Resource Group $ResourceGroupName"
       Write-Host `n
 
