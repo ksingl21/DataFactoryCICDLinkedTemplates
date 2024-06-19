@@ -44,102 +44,13 @@ stages:
         scriptLocation: 'scriptPath'
         scriptPath: '${{ variables.WorkingDirectory }}/cicd/new-linked-template/new-linked-template-create-deploy.ps1' # $(System.DefaultWorkingDirectory)/cicd/... also works
         arguments: "-FolderPathADFLinkedARMTemplates '$(Pipeline.Workspace)/${{ variables.ADFArtifactName }}/linkedTemplates' 
-                    -DeployTemplateSpecsResourceGroupName ${{ variables.DeployTemplateSpecsResourceGroupName }} 
-                    -DeployTemplateSpecsResourceGroupLocation ${{ variables.DeployTemplateSpecsResourceGroupLocation }} 
-                    -TemplateSpecsVersionNumber ${{ variables.TemplateSpecsVersionNumber }}
+                    -DeployTemplateSpecsResourceGroupName '${{ variables.DeployTemplateSpecsResourceGroupName }}' 
+                    -DeployTemplateSpecsResourceGroupLocation '${{ variables.DeployTemplateSpecsResourceGroupLocation }}' 
+                    -TemplateSpecsVersionNumber '${{ variables.TemplateSpecsVersionNumber }}'
                     -OutputFolderPathNewADFMasterARMTemplate  '${{ variables.WorkingDirectory }}'"
                     # FolderPathADFLinkedARMTemplates is where the pipeline stores the Data Factory (ADF) linked ARM Templates
      
-
-    # - task: CmdLine@2
-    #   displayName: "List Contents of the Pipeline ADF Artifact Workspace"
-    #   inputs:
-    #     script: dir
-    #     workingDirectory: "$(Pipeline.Workspace)/ADFArtifact/linkedTemplates"
-
-    - task: CmdLine@2
-      displayName: 'List All Files and directories'
-      inputs:
-        script: |
-          echo "Structure of work folder of this pipeline:"
-          tree $(Agent.WorkFolder)\1 /f
-
-          echo "Build.ArtifactStagingDirectory:" 
-
-          echo "$(Build.ArtifactStagingDirectory)"
-
-          echo "Build.BinariesDirectory:" 
-
-          echo "$(Build.BinariesDirectory)"
-
-          echo "Build.SourcesDirectory:"
-
-          echo "$(Build.SourcesDirectory)"
-
     
-    # - task: AzureCLI@2
-    #   displayName: 'Create Master Linked Template Spec'
-    #   inputs:
-    #     azureSubscription: 'DataFactoryCICDAzureResourceManager'
-    #     scriptType: 'pscore'
-    #     targetType: 'filePath'
-    #     scriptLocation: 'inlineScript'
-    #     inlineScript: |
-    #       Write-Host "Attempting to create the Template Spec for the NewARMTemplateV2_master.json file"
-    #       az ts create --name NewARMTemplateV2_master --version "1.0.0.0" --resource-group rg-adf-cicd-linked-uat --location "eastus" --template-file "$(System.DefaultWorkingDirectory)/NewARMTemplateV2_master.json" --output none
-    #       Write-Host "Successfully created the Template Spec. Name: NewARMTemplateV2_master. Resource Group: rg-adf-cicd-linked-uat"
-
-    #       $TemplateSpecResourceID = $(az ts show --name NewARMTemplateV2_master --resource-group rg-adf-cicd-linked-uat --version "1.0.0.0" --query "id")
-
-    #       Write-Host "Attempting to deploy the master linked Template Spec. Deploying to Data Factory adf-linked-templates-njl-uat. This may take a couple of mins."
-    #       az deployment group create --resource-group rg-adf-cicd-linked-uat --template-spec $TemplateSpecResourceID --parameters factoryName='adf-linked-templates-njl-uat' --output none
-    #       Write-Host "Successfully deployed to Data Factory adf-linked-templates-njl-uat"
-
-    
-    # Uncomment this task if you want to delete all of the Template Specs that were created.
-    # - task: AzureCLI@2
-    #   displayName: 'Optionally Delete All of the Template Specs'
-    #   inputs:
-    #     azureSubscription: 'DataFactoryCICDAzureResourceManager'
-    #     scriptType: 'pscore'
-    #     targetType: 'filePath'
-    #     scriptLocation: 'inlineScript'
-    #     inlineScript: |
-    #       Write-Host "Attempting to delete all of the Template Specs"
-    #       az group delete -name rg-adf-cicd-linked-uat --force-deletion-types Microsoft.Resources/templateSpecs --yes
-
-    #       Write-Host "Successfully deleted all of the Template Specs"
-
-
-
-    
-    
-    # - task: PowerShell@2
-    #   inputs:
-    #     targetType: 'filePath'
-    #     filePath: '$(System.DefaultWorkingDirectory)/cicd/new-linked-template/new-linked-template-create-deploy.ps1'
-    #     arguments: "-RootFolderPathLinkedARMTemplates '$(Pipeline.Workspace)/ADFArtifact/linkedTemplates' -ResourceGroupName 'rg-adf-cicd-linked-uat'" 
-
-
-
-
-    # - task: CmdLine@2
-    #   displayName: "List Contents of local path"
-    #   inputs:
-    #     script: dir
-    #     workingDirectory: "$(Build.Repository.LocalPath)/ArmTemplate"
-  
-  # - job: NewLinkedTemplateCreateDeploy
-  #   dependsOn: ValidateAndBuildDataFactoryTemplate
-  #   condition: succeeded()
-  #   displayName: "New Linked Template Create Deploy"
-  #   steps:
-  #   - task: PowerShell@2
-  #     inputs:
-  #       targetType: 'filePath'
-  #       filePath: '$(System.DefaultWorkingDirectory)/cicd/new-linked-template/new-linked-template-create-deploy.ps1'
-  #       arguments: "-RootFolderPathLinkedARMTemplates '$(Pipeline.Workspace)/ADFArtifact/linkedTemplates' -ResourceGroupName 'rg-adf-cicd-linked-uat'" 
-
 # DEPLOY TO UAT
 - stage: DeployToUAT
   dependsOn: BuildDEVDataFactory
@@ -179,6 +90,42 @@ stages:
     # dependsOn: DeployAzureResources
     # condition: succeeded()
     steps:
+    - task: AzureCLI@2
+      displayName: 'Deploy To UAT ADF'
+      inputs:
+        azureSubscription: 'DataFactoryCICDAzureResourceManager'
+        scriptType: 'pscore'
+        targetType: 'filePath'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          Write-Host "Attempting to retrieve the resource ID for the new ARMTemplateV2_master Template Spec"
+          $TemplateSpecResourceID = $(az ts show --name NewARMTemplateV2_master --resource-group rg-adf-cicd-linked-uat --version "1.0.0.0" --query "id")
+
+          Write-Host "Successfully retrieved the resource ID for the new master Spec Template"
+
+          Write-Host "Attempting to deploy the master linked Template Spec to Data Factory ${{ variables.DataFactoryName }}. This may take a couple of mins."
+          az deployment group create --resource-group rg-adf-cicd-linked-uat --template-spec $TemplateSpecResourceID --parameters factoryName='adf-linked-templates-njl-uat' --output none
+          Write-Host "Successfully deployed to Data Factory ${{ variables.DataFactoryName }}"
+
+    
+    # Uncomment this task if you want to delete all of the Template Specs that were created.
+    # - task: AzureCLI@2
+    #   displayName: 'Optionally Delete All of the Template Specs'
+    #   inputs:
+    #     azureSubscription: 'DataFactoryCICDAzureResourceManager'
+    #     scriptType: 'pscore'
+    #     targetType: 'filePath'
+    #     scriptLocation: 'inlineScript'
+    #     inlineScript: |
+    #       Write-Host "Attempting to delete all of the Template Specs"
+    #       az group delete -name rg-adf-cicd-linked-uat --force-deletion-types Microsoft.Resources/templateSpecs --yes
+
+    #       Write-Host "Successfully deleted all of the Template Specs"
+    
+    
+    
+    
+    
     - template: adf-cicd/adf-deploy.yml
       parameters:
         AzureResourceManagerConnection: "${{ variables.AzureResourceManagerConnection }}"
@@ -244,7 +191,24 @@ stages:
 
 
 
+    # - task: CmdLine@2
+    #   displayName: 'List All Files and directories'
+    #   inputs:
+    #     script: |
+    #       echo "Structure of work folder of this pipeline:"
+    #       tree $(Agent.WorkFolder)\1 /f
 
+    #       echo "Build.ArtifactStagingDirectory:" 
+
+    #       echo "$(Build.ArtifactStagingDirectory)"
+
+    #       echo "Build.BinariesDirectory:" 
+
+    #       echo "$(Build.BinariesDirectory)"
+
+    #       echo "Build.SourcesDirectory:"
+
+    #       echo "$(Build.SourcesDirectory)"
 
 
 
