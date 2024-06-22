@@ -138,7 +138,8 @@ stages:
 
 
 
-    # Uncomment this task if you want to delete all of the Template Specs that were created.
+    # Uncomment this task if you want to delete all of the Template Specs in the Resource Group. 
+    # Note, this will delete all Template Specs in the Resource Group
     - task: AzureCLI@2
       displayName: 'Optionally Delete All of the Template Specs'
       inputs:
@@ -147,9 +148,13 @@ stages:
         targetType: 'filePath'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          Write-Host "Attempting to delete all of the Template Specs from Resource Group ${{ variables.TemplateSpecsResourceGroupName }}"
-          az group delete -name '${{ variables.TemplateSpecsResourceGroupName }}' --force-deletion-types Microsoft.Resources/templateSpecs --yes
+          $TemplateSpecNames = $(az ts list --resource-group rg-adf-cicd-linked-uat --query "[].name" --output tsv)
 
+          foreach($Name in $TemplateSpecNames){
+              Write-Host "Attempting to delete Template Spec $Name"
+              az resource delete --name $Name --resource-group '${{ variables.TemplateSpecsResourceGroupName }}' --resource-type 'Microsoft.Resources/templateSpecs'
+              Write-Host "Successfully deleted Template Spec $Name"
+          }  
           Write-Host "Successfully deleted all of the Template Specs from Resource Group ${{ variables.TemplateSpecsResourceGroupName }}"
 
 
