@@ -9,7 +9,7 @@
 
 ![ARMTemplateLimits](Images/ARMTemplateLimits.png)
 
-## **Current Approach and Challanges**
+## **Current Approach and Challenges**
 
 - [Data Factory Linked Resource Template Overview](https://learn.microsoft.com/en-us/azure/data-factory/continuous-integration-delivery-linked-templates)
 - [Data Factory Linked Template Steps](https://learn.microsoft.com/en-us/archive/blogs/najib/deploying-linked-arm-templates-with-vsts)
@@ -24,7 +24,7 @@
 6. Deploy the Linked ARM Templates to the target ADF (UAT, PROD, etc.)
 7. Either delete the Storage Account or wait for the SAS token to expire
 
-### Challanges
+### Challenges
 
 - Storage Account has to have public access enabled (can't lock it down via firewall/private endpoints)
 - SAS doesn't need to authenticate users. Whoever has a SAS token can use it to access the Storage Account

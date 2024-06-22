@@ -4,16 +4,17 @@
     # Creates 200 new Data Factory pipelines (35 Wait Activities in each pipeline) to create an overall ARM template over 4MB
     # Links the Data Factory to a GitHub repo.
 
+    
+# Helpful Links:
+# https://learn.microsoft.com/en-us/cli/azure/storage/container?view=azure-cli-latest#az-storage-container-generate-sas
+# https://andrewmatveychuk.com/how-to-deploy-linked-arm-templates-from-private-azure-devops-repositories/
+# https://github.com/starkfell/100DaysOfIaC/blob/master/articles/day.42.deploy.nested.arm.templates.using.storage.accounts.in.yaml.pipeline.md?ref=andrewmatveychuk.com#1-preparing-the-arm-templates
+# https://www.nathannellans.com/post/ci-cd-with-azure-data-factory-part-2
+# https://github.com/nnellans/azure-data-factory/tree/main
 
-    # https://learn.microsoft.com/en-us/cli/azure/storage/container?view=azure-cli-latest#az-storage-container-generate-sas
-    # https://andrewmatveychuk.com/how-to-deploy-linked-arm-templates-from-private-azure-devops-repositories/
-    # https://github.com/starkfell/100DaysOfIaC/blob/master/articles/day.42.deploy.nested.arm.templates.using.storage.accounts.in.yaml.pipeline.md?ref=andrewmatveychuk.com#1-preparing-the-arm-templates
-    # https://www.nathannellans.com/post/ci-cd-with-azure-data-factory-part-2
-    # https://github.com/nnellans/azure-data-factory/tree/main
 
-
-    # https://github.com/JFolberth/TheYAMLPipelineOne
-    # https://blog.johnfolberth.com/deploying-linked-arm-templates-via-yaml-pipelines/
+# https://github.com/JFolberth/TheYAMLPipelineOne
+# https://blog.johnfolberth.com/deploying-linked-arm-templates-via-yaml-pipelines/
 
 
 # Resource Names and Config
