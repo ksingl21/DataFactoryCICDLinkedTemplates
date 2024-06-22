@@ -1,0 +1,14 @@
+{
+	"name": "LS_ADLS",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://datalake1njl.dfs.core.windows.net/"
+		},
+		"connectVia": {
+			"referenceName": "IR-TEST",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
