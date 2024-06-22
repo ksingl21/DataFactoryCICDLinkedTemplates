@@ -21,7 +21,7 @@ $DEVResourceGroupName = 'rg-adf-cicd-linked'
 $UATResourceGroupName = 'rg-adf-cicd-linked-uat'
 $PRODResourceGroupName = 'rg-adf-cicd-linked-prod'
 $DataFactoryName = 'adf-linked-templates-njl'
-$DataFactoryPipelineDefinitionFileName = 'DataFactoryPipeline.json'
+$DataFactoryPipelineDefinitionFileName = 'DataFactoryPipeline.json' # Uses the file definition to create the Data Factory (ADF) pipelines
 $Location = 'eastus'
 
 # GitHub Repo Config. Used to connect the Data Factory to the GitHub repo
@@ -42,13 +42,13 @@ az group create --name $PRODResourceGroupName --location $Location # PROD
 az datafactory create --factory-name $DataFactoryName --resource-group $DEVResourceGroupName --location $Location
 
 
-# # Creates 200 new Data Factory pipelines (35 Wait Activities in each pipeline). 
-# To deploy fewer or more pipelines, change the -le 200 to a different number. Ex: -le 10 will deploy 10 pipelines.
-# Loops from 1 to 200 creating a pipeline named PL_WAIT_Number. Ex: PL_WAIT_1, PL_WAIT_2... PL_WAIT_200 
+# # Creates 1000 new Data Factory pipelines (multiple Wait Activities. See DataFactoryPipeline.json file). 
+# To deploy fewer or more pipelines, change the -le 1000 below to a different number. Ex: -le 10 will deploy only 10 pipelines.
+# Loops from 1 to 1000 creating a pipeline named PL_WAIT_Number. Ex: PL_WAIT_1, PL_WAIT_2... PL_WAIT_200 
 for ($i = 1; $i -le 1000; $i++) {
     $PipelineName = "PL_WAIT_" + $i.ToString() # Ex: PL_WAIT_1
     
-    # Creates a new Data Factory Pipeline using the 35 Wait Activity Data Factory JSON file: 'DataFactoryPipeline.json'
+    # Creates a new Data Factory Pipeline using the Wait Activity Data Factory JSON file: 'DataFactoryPipeline.json'
     az datafactory pipeline create --factory-name $DataFactoryName --pipeline $DataFactoryPipelineDefinitionFileName --name $PipelineName --resource-group $DEVResourceGroupName
 }
 
