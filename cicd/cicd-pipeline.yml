@@ -90,8 +90,8 @@ stages:
      
 # DEPLOY TO UAT
 - stage: DeployToUAT
-  dependsOn: BuildDEVDataFactory
-  condition: succeeded()
+  # dependsOn: BuildDEVDataFactory
+  # condition: succeeded()
   displayName: "Deploy To UAT"
 
   variables:
@@ -155,8 +155,8 @@ stages:
 
   - job: DeployDataFactory
     displayName: "Deploy ADF ARM Template To Target ADF"
-    dependsOn: DeployAzureResources
-    condition: succeeded()
+    # dependsOn: DeployAzureResources
+    # condition: succeeded()
     steps:
     - template: adf-cicd/adf-deploy.yml
       parameters:
