@@ -33,6 +33,7 @@ Step 2:
 
 
 # Defining parameters for the script. The values are passed in from the cicd-pipeline.yml pipeline (Create Template Specs for ADF Linked ARM Templates) task
+# All of the parameter values come from the variables files (variables/dev-variables.yml, etc.)
 [CmdletBinding()]
 param(
   $FolderPathADFLinkedARMTemplates,
