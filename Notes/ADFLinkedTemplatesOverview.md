@@ -19,7 +19,7 @@
 1. Create a Storage Account (public access enabled)
 2. Copy ADF Linked ARM Template files to the Storage Account
 3. Create a SAS (Shared Access Signature) token on the Storage Account and set the expiration timestamp
-4. Add the SAS token as a secret varible on the Azure Pipeline or store it as a Key Vault Secret and then connect to it to the Pipeline
+4. Add the SAS token as a secret variable on the Azure Pipeline or store it as a Key Vault Secret and then connect to it to the Pipeline
 5. Add the SAS token (or Key Vault secret) and Storage Account info to the deployment task so ARM (Azure Resource Manager) can use it to deploy the ADF Linked Templates
 6. Deploy the Linked ARM Templates to the target ADF (UAT, PROD, etc.)
 7. Either delete the Storage Account or wait for the SAS token to expire
@@ -28,11 +28,11 @@
 
 - Storage Account has to have public access enabled (can't lock it down via firewall/private endpoints)
 - SAS doesn't need to authenticate users. Whoever has a SAS token can use it to access the Storage Account
-- SAS token is logged in the deployment operations even if passed as a secure string (see Additional ARM Limits link)
+- SAS token is logged in the deployment operations even if passed as a secure string (see [Additional ARM Limits](https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/linked-templates?tabs=azure-powershell#securing-an-external-template))
 - No API or way to check how many SAS tokens are on a Storage Account
 - No way to delete a SAS once it has been created (have to let it expire)
-- Have to give elevated permissions on a Storage Account in order to create a SAS
-
+- Have to give elevated permissions on a Storage Account in order to generate a SAS token
+- AzureFileCopy@6 Azure Pipeline task only works on Windows agents. Have to use a different approach (ex: az storage blob) for Linux agents  
 
 ## **New Approach Using Linked Template Specs**
 
@@ -48,4 +48,5 @@
 - Template Specs are RBAC secured by default
 - Can version Template Specs (1.0.0.0, 1.0.0.1, etc.)
 - No need to copy files to a public Storage Account or create and retrieve an SAS token
-- Process is automated via the new pipeline code
+- Process is automated via the new Pipeline code
+- Can use any agent (Windows, Linux, etc.)

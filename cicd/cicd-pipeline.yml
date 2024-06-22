@@ -6,7 +6,7 @@ trigger: none
 # - main # Will trigger the pipeline after a commit to the main branch. Can update to trigger: none to only run the pipeline manually.
 
 pool:
-  vmImage: "windows-latest"
+  vmImage: "ubuntu-latest" # https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops&tabs=yaml
 
 stages:
 - stage: BuildDEVDataFactory
