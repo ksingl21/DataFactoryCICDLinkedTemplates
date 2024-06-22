@@ -2,7 +2,7 @@
 	"name": "adf-linked-templates-njl",
 	"properties": {
 		"globalParameters": {
-			"testglobal": {
+			"GL_TEST_DEV_NUMBER": {
 				"type": "int",
 				"value": 1
 			},
