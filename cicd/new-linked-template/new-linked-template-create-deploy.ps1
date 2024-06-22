@@ -1,11 +1,3 @@
-# Helpful Links:
-# https://dev.to/adbertram/running-powershell-scripts-in-azure-devops-pipelines-2-of-2-3j0e
-# https://stackoverflow.com/questions/47779157/convertto-json-and-convertfrom-json-with-special-characters
-# https://learn.microsoft.com/en-us/cli/azure/delete-azure-resources-at-scale#delete-all-azure-resources-of-a-type
-# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_automatic_variables?view=powershell-7.4#matches
-# https://learn.microsoft.com/en-us/azure/data-factory/continuous-integration-delivery-linked-templates
-
-
 <#
 PowerShell script can be used to deploy Data Factory (ADF) via linked templates in a more secure way instead of using a Storage Account and SAS token. Use linked templates when the Data Factory ARM template is over 4 MB.
 Original linked template ADF approach for context: https://learn.microsoft.com/en-us/azure/data-factory/continuous-integration-delivery-linked-templates
@@ -28,6 +20,15 @@ Step 2:
     - Updates the apiVersion property to one that can use the Template Spec id property (2019-11-01 for example) 
     - Ensures the special characters in JSON are escaped properly when generating the updated file (see https://stackoverflow.com/questions/47779157/convertto-json-and-convertfrom-json-with-special-characters)
     - Outputs the new file (doesn't overwrite the existing file) to the root of the repository: "$(Build.Repository.LocalPath)/NewARMTemplateV2_master.json"
+
+    
+# Helpful Links:
+# https://dev.to/adbertram/running-powershell-scripts-in-azure-devops-pipelines-2-of-2-3j0e
+# https://stackoverflow.com/questions/47779157/convertto-json-and-convertfrom-json-with-special-characters
+# https://learn.microsoft.com/en-us/cli/azure/delete-azure-resources-at-scale#delete-all-azure-resources-of-a-type
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_automatic_variables?view=powershell-7.4#matches
+# https://learn.microsoft.com/en-us/azure/data-factory/continuous-integration-delivery-linked-templates
+
 #>
 
 
@@ -42,7 +43,7 @@ param(
   $OutputFolderPathNewADFMasterARMTemplate
 )
 
-
+# Grabs the ADF linked template files 
 $LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -Exclude *master* # Excludes the master.json and parameters_master.json files
 
     Write-Host "Attempting to create the template specs for the linked ARM templates. Template Spec resources will be deployed in Resource Group $DeployTemplateSpecsResourceGroupName. This may take a few of minutes."
@@ -65,6 +66,7 @@ $LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -
     Write-Host "Successfully created all necessary Template Specs in Resource Group $DeployTemplateSpecsResourceGroupName"
     Write-Host `n
 
+    # Reading the ArmTemplate_master.json file
     Write-Host "Attempting to read the ArmTemplate_master.json file"
     $MasterARMTemplateFile = Get-Content $FolderPathADFLinkedARMTemplates/ArmTemplate_master.json -Raw | ConvertFrom-Json
     Write-Host "Successfully read the ArmTemplate_master.json file"
@@ -92,7 +94,7 @@ $LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -
 
     Write-Host "Attempting to output the new Master.json file"
 
-    # Ensures the JSON special characters are escaped and come through correctly. For example not returning a \u0027 string value.
+    # Ensures the JSON special characters are escaped and come through correctly. For example, not returning a \u0027 string value.
     # See https://stackoverflow.com/questions/47779157/convertto-json-and-convertfrom-json-with-special-characters for more details.
     $MasterARMTemplateFile | ConvertTo-Json -Depth 15 | %{
     [Regex]::Replace($_, 
