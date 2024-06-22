@@ -5,6 +5,10 @@
 			"testglobal": {
 				"type": "int",
 				"value": 1
+			},
+			"testglobal2": {
+				"type": "bool",
+				"value": false
 			}
 		}
 	},
