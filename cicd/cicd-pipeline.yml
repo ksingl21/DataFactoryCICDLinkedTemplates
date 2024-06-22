@@ -98,21 +98,21 @@ stages:
   - template: variables/uat-variables.yml
 
   jobs:
-  # - job: DeployAzureResources
-  #   displayName: "Deploy Azure Resources Via Bicep"
-  #   steps:
-  #   - template: azure-resources/deploy-azure-resources.yml
-  #     parameters:
-  #       AzureResourceManagerConnection: "${{ variables.AzureResourceManagerConnection }}"
-  #       DataFactoryName: "${{ variables.DataFactoryName }}"
-  #       ADFResourceGroupName: "${{ variables.ADFResourceGroupName }}"
-  #       ADFBicepTemplateFilePath: "${{ variables.ADFBicepTemplateFilePath }}"
+  - job: DeployAzureResources
+    displayName: "Deploy Azure Resources Via Bicep"
+    steps:
+    - template: azure-resources/deploy-azure-resources.yml
+      parameters:
+        AzureResourceManagerConnection: "${{ variables.AzureResourceManagerConnection }}"
+        DataFactoryName: "${{ variables.DataFactoryName }}"
+        ADFResourceGroupName: "${{ variables.ADFResourceGroupName }}"
+        ADFBicepTemplateFilePath: "${{ variables.ADFBicepTemplateFilePath }}"
       
 
   - job: DeployDataFactory
     displayName: "Deploy ADF Using Linked Template Specs To Target ADF"
-    # dependsOn: DeployAzureResources
-    # condition: succeeded()
+    dependsOn: DeployAzureResources
+    condition: succeeded()
     steps:
     - template: adf-cicd/adf-deploy.yml
       parameters:
