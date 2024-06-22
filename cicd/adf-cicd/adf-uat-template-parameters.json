@@ -8,7 +8,7 @@
         "LS_ADLS_properties_typeProperties_url": {
             "value": "https://adlsuat11223.dfs.core.windows.net/"
         },
-        "default_properties_GL_DEV_NUMBER_value": {
+        "default_properties_GL_NUMBER_value": {
             "value": 2
         },
         "default_properties_GL_STRING_value": {
