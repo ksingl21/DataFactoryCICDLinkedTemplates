@@ -6,9 +6,9 @@
 				"type": "int",
 				"value": 1
 			},
-			"GL_TEST_DEV_BOOL": {
-				"type": "bool",
-				"value": false
+			"GL_TEST_DEV_STRING": {
+				"type": "string",
+				"value": "DEV"
 			}
 		}
 	},
