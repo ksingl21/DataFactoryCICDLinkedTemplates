@@ -24,7 +24,7 @@ variables:
 - name: TemplateSpecsVersionNumber # Version number for the Template Specs. Ex: 1.0.0.0 Ex2: 1.0.0.1 etc.
   value: "1.0.0.0"
 
-- name: TemplateSpecMasterName # This is the name that will be used when creating the master Template Spec (replaces the ADF master Linked ARM Template).
+- name: TemplateSpecMasterName # This is the name that will be used when creating the master Template Spec (which will be used instead of the original ADF master Linked ARM Template).
   value: "NewARMTemplateV2_master"
 
 - name: OutputFolderPathNewADFMasterARMTemplate
