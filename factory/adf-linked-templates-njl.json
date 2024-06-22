@@ -6,7 +6,7 @@
 				"type": "int",
 				"value": 1
 			},
-			"testglobal2": {
+			"GL_TEST_DEV_BOOL": {
 				"type": "bool",
 				"value": false
 			}
