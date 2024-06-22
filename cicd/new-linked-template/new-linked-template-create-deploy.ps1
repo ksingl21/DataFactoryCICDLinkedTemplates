@@ -84,6 +84,7 @@ $LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -
     $TemplateSpecResourceID = $(az ts show --name $TemplateSpecExtractedName --resource-group $DeployTemplateSpecsResourceGroupName --version $TemplateSpecsVersionNumber --query "id")
 
     $Resource.properties.templateLink | Add-Member -Name "id" -value $TemplateSpecResourceID.replace("`"","") -MemberType NoteProperty # removes the initial and ending double quotes from the string
+    
     ($Resource.properties.templateLink).PSObject.Properties.Remove('uri')
     ($Resource.properties.templateLink).PSObject.Properties.Remove('contentVersion')
 
@@ -105,7 +106,7 @@ $LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -
     Write-Host "Successfully created the $TemplateSpecMasterName.json file"
     
     Write-Host "Attempting to create the Template Spec for the $TemplateSpecMasterName.json file"
-    
+
     az ts create --name $TemplateSpecMasterName --version $TemplateSpecsVersionNumber --resource-group $DeployTemplateSpecsResourceGroupName --location $DeployTemplateSpecsResourceGroupLocation `
       --template-file "$OutputFolderPathNewADFMasterARMTemplate/$TemplateSpecMasterName.json" --output none
     

@@ -86,6 +86,7 @@ steps:
       
       Write-Host "Attempting to retrieve the resource ID for the new ${{ parameters.TemplateSpecMasterName }} Template Spec"
       $TemplateSpecResourceID = $(az ts show --name '${{ parameters.TemplateSpecMasterName }}' --resource-group '${{ parameters.TemplateSpecsResourceGroupName }}' --version '${{ parameters.TemplateSpecMasterVersionNumber }}' --query "id")
+      $TemplateSpecResourceID = $TemplateSpecResourceID.replace("`"","")
 
       Write-Host "Successfully retrieved the resource ID for the new master Template Spec ${{ parameters.TemplateSpecMasterName }}"
 
