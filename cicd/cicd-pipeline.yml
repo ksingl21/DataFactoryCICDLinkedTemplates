@@ -98,15 +98,15 @@ stages:
   - template: variables/uat-variables.yml
 
   jobs:
-  - job: DeployAzureResources
-    displayName: "Deploy Azure Resources Via Bicep"
-    steps:
-    - template: azure-resources/deploy-azure-resources.yml
-      parameters:
-        AzureResourceManagerConnection: "${{ variables.AzureResourceManagerConnection }}"
-        DataFactoryName: "${{ variables.DataFactoryName }}"
-        ADFResourceGroupName: "${{ variables.ADFResourceGroupName }}"
-        ADFBicepTemplateFilePath: "${{ variables.ADFBicepTemplateFilePath }}"
+  # - job: DeployAzureResources
+  #   displayName: "Deploy Azure Resources Via Bicep"
+  #   steps:
+  #   - template: azure-resources/deploy-azure-resources.yml
+  #     parameters:
+  #       AzureResourceManagerConnection: "${{ variables.AzureResourceManagerConnection }}"
+  #       DataFactoryName: "${{ variables.DataFactoryName }}"
+  #       ADFResourceGroupName: "${{ variables.ADFResourceGroupName }}"
+  #       ADFBicepTemplateFilePath: "${{ variables.ADFBicepTemplateFilePath }}"
       
 
   - job: DeployDataFactory
@@ -142,15 +142,15 @@ stages:
   - template: variables/prod-variables.yml
 
   jobs:  
-  - job: DeployAzureResources
-    displayName: "Deploy Azure Resources Via Bicep"
-    steps:
-    - template: azure-resources/deploy-azure-resources.yml
-      parameters:
-        AzureResourceManagerConnection: "${{ variables.AzureResourceManagerConnection }}"
-        DataFactoryName: "${{ variables.DataFactoryName }}"
-        ADFResourceGroupName: "${{ variables.ADFResourceGroupName }}"
-        ADFBicepTemplateFilePath: "${{ variables.ADFBicepTemplateFilePath }}"
+  # - job: DeployAzureResources
+  #   displayName: "Deploy Azure Resources Via Bicep"
+  #   steps:
+  #   - template: azure-resources/deploy-azure-resources.yml
+  #     parameters:
+  #       AzureResourceManagerConnection: "${{ variables.AzureResourceManagerConnection }}"
+  #       DataFactoryName: "${{ variables.DataFactoryName }}"
+  #       ADFResourceGroupName: "${{ variables.ADFResourceGroupName }}"
+  #       ADFBicepTemplateFilePath: "${{ variables.ADFBicepTemplateFilePath }}"
 
 
   - job: DeployDataFactory
