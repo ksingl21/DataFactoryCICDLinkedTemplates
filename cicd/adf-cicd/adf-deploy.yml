@@ -69,7 +69,7 @@ steps:
       -deleteDeployment $false
 
 - task: AzureCLI@2
-  displayName: 'Deploy To UAT ADF Using Linked Template Spec'
+  displayName: 'Deploy To ADF Using Linked Template Spec'
   inputs:
     azureSubscription: 'DataFactoryCICDAzureResourceManager'
     scriptType: 'pscore'
