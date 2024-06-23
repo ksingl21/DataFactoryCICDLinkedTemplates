@@ -1,7 +1,0 @@
-{
-	"name": "PE_MANAGED_ADLS",
-	"properties": {
-		"privateLinkResourceId": "/subscriptions/126c93ce-f0a6-493c-8991-cdcbd797366d/resourceGroups/rg-adf-cicd-linked/providers/Microsoft.Storage/storageAccounts/adlsdev11223",
-		"groupId": "dfs"
-	}
-}
