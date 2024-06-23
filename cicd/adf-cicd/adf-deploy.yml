@@ -46,11 +46,11 @@ steps:
     artifactName: "${{ parameters.ADFArtifactName }}"
     targetpath: "$(Pipeline.Workspace)/ADFArtifact"
 
-- task: CmdLine@2
-  displayName: "List Contents of the Pipeline ADF Artifact Workspace"
-  inputs:
-    script: dir
-    workingDirectory: "$(Pipeline.Workspace)/ADFArtifact"
+# - task: CmdLine@2
+#   displayName: "List Contents of the Pipeline ADF Artifact Workspace"
+#   inputs:
+#     script: dir
+#     workingDirectory: "$(Pipeline.Workspace)/ADFArtifact"
 
 - task: AzurePowerShell@5
   displayName: "Stop Current ADF Triggers"
