@@ -5,11 +5,11 @@
 
 
 # Prerequisites:
-# Acquire a Personal Access Token in the DevOps project and save in AzureDevopsDEWithNickPAT local env variable:    
+# Acquire a Personal Access Token in the DevOps project and save in AzureDevopsDEWithNickPAT local environment variable:    
     # To acquire an access token, go to AzurePipelineDataFactoryCICD Azure DevOps project, top right under user settings, 
-    # personal Access Token, create one then save as environment variable on my comp. 
+    # personal Access Token, create one then save as environment variable on your computer.
 
-
+    
 # Uses the AZURE_DEVOPS_EXT_PAT environment variable option to login to use the az devops commands. See helpful links section.
 # Alternative way to set an environment variable: [Environment]::SetEnvironmentVariable('AZURE_DEVOPS_EXT_PAT', $env:AzureDevopsDEWithNickPAT)
 $env:AZURE_DEVOPS_EXT_PAT = $env:AzureDevopsDEWithNickPAT

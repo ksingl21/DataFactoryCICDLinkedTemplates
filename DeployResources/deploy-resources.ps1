@@ -1,8 +1,8 @@
 # Creates the following new resources:
     # DEV, UAT and PROD resource groups
     # Creates a new Data Factory in the DEV resource group 
-    # Creates 200 new Data Factory pipelines (35 Wait Activities in each pipeline) to create an overall ARM template over 4MB
-    # Links the Data Factory to a GitHub repo.
+    # Creates 1000 new Data Factory pipelines multiple wait activities (DataFactoryPipeline.json file) to create an overall ARM template over 4MB
+    # Optionally, links the Data Factory to a GitHub repo. Comment the #GitHub Repo sections if you don't want that.
 
     
 # Helpful Links:
