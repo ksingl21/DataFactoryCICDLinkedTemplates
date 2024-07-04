@@ -1,3 +1,5 @@
+
+
 <#
 PowerShell script can be used to deploy Data Factory (ADF) via linked templates in a more secure way instead of using a Storage Account and SAS token. Use linked templates when the Data Factory ARM template is over 4 MB.
 Original linked template ADF approach for context: https://learn.microsoft.com/en-us/azure/data-factory/continuous-integration-delivery-linked-templates

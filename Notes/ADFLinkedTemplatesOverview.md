@@ -1,6 +1,6 @@
 # **Why Use Data Factory (ADF) Linked Templates?**
 
-- ADF ARM Template is **over 4 MB** in size. Example error message:
+- ADF Azure Resource Manager (ARM) Template is **over 4 MB** in size. Example error message:
 
 ![Over4MBDeploymentErrorMessage](Images/Over4MBDeploymentError.png)
 
