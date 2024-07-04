@@ -31,6 +31,7 @@ parameters:
   - UAT
   - PROD
 
+
 steps:
 - checkout: self
   displayName: "Checkout Source Repo Code"
@@ -86,7 +87,7 @@ steps:
       
       Write-Host "Attempting to retrieve the resource ID for the new ${{ parameters.TemplateSpecMasterName }} Template Spec"
       $TemplateSpecResourceID = $(az ts show --name '${{ parameters.TemplateSpecMasterName }}' --resource-group '${{ parameters.TemplateSpecsResourceGroupName }}' --version '${{ parameters.TemplateSpecMasterVersionNumber }}' --query "id")
-      $TemplateSpecResourceID = $TemplateSpecResourceID.replace("`"","")
+      $TemplateSpecResourceID = $TemplateSpecResourceID.replace("`"","") # removes the initial and ending double quotes from the string
 
       Write-Host "Successfully retrieved the resource ID for the new master Template Spec ${{ parameters.TemplateSpecMasterName }}"
 
