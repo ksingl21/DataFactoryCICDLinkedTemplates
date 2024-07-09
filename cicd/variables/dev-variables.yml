@@ -2,7 +2,7 @@
 
 variables: 
 - name: BuildDataFactoryName
-  value: "adf-linked-templates-njl"
+  value: "adf-linked-templates-njl222222"
 
 - name: BuildDataFactoryResourceGroupName
   value: "rg-adf-cicd-linked"
