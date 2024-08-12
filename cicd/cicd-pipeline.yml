@@ -36,6 +36,23 @@ stages:
     
 
     - task: AzureCLI@2
+      displayName: 'Create New Linked Master ARM Template File'
+      inputs:
+        azureSubscription: 'DataFactoryCICDAzureResourceManager'
+        scriptType: 'pscore'
+        targetType: 'filePath'
+        scriptLocation: 'scriptPath'
+        scriptPath: '${{ variables.WorkingDirectory }}/cicd/new-linked-templates-process/CreateNewMasterARMTemplateFile.ps1'
+        arguments: "-FolderPathADFLinkedARMTemplates '$(Pipeline.Workspace)/${{ variables.ADFArtifactName }}/linkedTemplates' 
+                    -DeployTemplateSpecsResourceGroupName '${{ variables.DeployTemplateSpecsResourceGroupName }}' 
+                    -DeployTemplateSpecsResourceGroupLocation '${{ variables.DeployTemplateSpecsResourceGroupLocation }}' 
+                    -TemplateSpecsVersionNumber '${{ variables.TemplateSpecsVersionNumber }}'
+                    -TemplateSpecMasterName '${{ variables.TemplateSpecMasterName }}'
+                    -OutputFolderPathNewADFMasterARMTemplate  '${{ variables.WorkingDirectory }}'"
+
+
+
+    - task: AzureCLI@2
       displayName: 'Create Template Specs for ADF Linked ARM Templates'
       inputs:
         azureSubscription: 'DataFactoryCICDAzureResourceManager'
