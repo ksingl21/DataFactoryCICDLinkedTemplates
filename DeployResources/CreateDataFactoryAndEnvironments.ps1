@@ -2,7 +2,6 @@
     # DEV, UAT and PROD resource groups
     # Creates a new Data Factory in the DEV resource group 
     # Creates 1000 new Data Factory pipelines (multiple wait activities created from the DataFactoryPipeline.json file) to create an overall ARM template over 4MB
-    # Optionally, links the Data Factory to a GitHub repo. Comment the #GitHub Repo sections if you don't want that.
 
     
 # Helpful Links:
@@ -27,13 +26,6 @@ $DataFactoryName = 'adf-linked-templates-njl'
 $DataFactoryPipelineDefinitionFileName = 'DataFactoryPipelines.json' # Uses the file definition to create the Data Factory (ADF) pipelines
 $Location = 'eastus'
 
-# GitHub Repo Config. Used to connect the Data Factory to the GitHub repo
-$GitHubHostNameURL = 'https://github.com/DataEngineeringWithNick/DataFactoryCICDLinkedTemplates'
-$GitHubAccountName = 'DataEngineeringWithNick'
-$GitHubRepositoryName = 'DataFactoryCICDLinkedTemplates'
-$GitHubRepoCollaborationBranchName = 'main'
-$GitHubRepoRootFolderName = '/'
-
 
 # # Create the DEV, UAT, PROD resource group names
 az group create --name $DEVResourceGroupName --location $Location # DEV
@@ -54,21 +46,6 @@ for ($i = 1; $i -le 1000; $i++) {
     # Creates a new Data Factory Pipeline using the Wait Activity Data Factory JSON file: 'DataFactoryPipeline.json'
     az datafactory pipeline create --factory-name $DataFactoryName --pipeline $DataFactoryPipelineDefinitionFileName --name $PipelineName --resource-group $DEVResourceGroupName
 }
-
-
-# Configure Data Factory to GitHub repo
-
-# Get the resource ID for the Data Factory. Ex: /subscriptions/xxxxxx/resourceGroups/xxxxx/providers/Microsoft.DataFactory/factories/datafactoryname
-$DataFactoryResourceID = $(az ad sp list --filter "displayname eq '$DataFactoryName'" --query "[].alternativeNames[1]" --output tsv)
-
-
-# # Configures the Data Factory to the GitHub repo
-az datafactory configure-factory-repo --factory-git-hub-configuration host-name=$GitHubHostNameURL  account-name=$GitHubAccountName repository-name=$GitHubRepositoryName `
-    collaboration-branch=$GitHubRepoCollaborationBranchName root-folder=$GitHubRepoRootFolderName --location $Location `
-    --factory-resource-id $DataFactoryResourceID
-
-# Manual step:
-    # Go into the Data Factory, manage tab, Git Configuration then import resources to main branch.
 
 
 # To cleanup and delete everything above
