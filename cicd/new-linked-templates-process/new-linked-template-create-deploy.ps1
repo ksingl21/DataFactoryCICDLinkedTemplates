@@ -51,27 +51,27 @@ param(
 
 
 # Grabs the ADF linked template files
-$LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -Exclude *master* # Excludes the ArmTemplate_master.json and ArmTemplateParameters_master.json files
+# $LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -Exclude *master* # Excludes the ArmTemplate_master.json and ArmTemplateParameters_master.json files
 
-    Write-Host "Attempting to create the Template Specs for the Linked ARM Templates. Template Spec resources will be deployed in Resource Group $DeployTemplateSpecsResourceGroupName. This may take a few of minutes."
-    Write-Host `n
+#     Write-Host "Attempting to create the Template Specs for the Linked ARM Templates. Template Spec resources will be deployed in Resource Group $DeployTemplateSpecsResourceGroupName. This may take a few of minutes."
+#     Write-Host `n
 
-    foreach ($FileName in $LinkedARMTemplateFiles.Name) {
+#     foreach ($FileName in $LinkedARMTemplateFiles.Name) {
       
-      # Removes .json from the file name. Ex: ArmTemplate_0.json becomes ArmTemplate_0
-      $TemplateSpecName = $FileName.split('.')[0]
+#       # Removes .json from the file name. Ex: ArmTemplate_0.json becomes ArmTemplate_0
+#       $TemplateSpecName = $FileName.split('.')[0]
       
-      # Create a new Template Spec for each ARM Template. Doesn't update the ARM Template at all
-      Write-Host "Attempting to create a new Template Spec for linked ARM template $TemplateSpecName.json"
-      az ts create --name $TemplateSpecName --version $TemplateSpecsVersionNumber --resource-group $DeployTemplateSpecsResourceGroupName --location $DeployTemplateSpecsResourceGroupLocation `
-        --template-file $FolderPathADFLinkedARMTemplates/$FileName --yes --output none # --yes means don't prompt for confirmation and overwrite the existing Template Spec if it exists
+#       # Create a new Template Spec for each ARM Template. Doesn't update the ARM Template at all
+#       Write-Host "Attempting to create a new Template Spec for linked ARM template $TemplateSpecName.json"
+#       az ts create --name $TemplateSpecName --version $TemplateSpecsVersionNumber --resource-group $DeployTemplateSpecsResourceGroupName --location $DeployTemplateSpecsResourceGroupLocation `
+#         --template-file $FolderPathADFLinkedARMTemplates/$FileName --yes --output none # --yes means don't prompt for confirmation and overwrite the existing Template Spec if it exists
       
-      Write-Host "Successfully created a new Template Spec called $TemplateSpecName for Linked ARM Template $TemplateSpecName.json"
-      Write-Host `n
-    }
+#       Write-Host "Successfully created a new Template Spec called $TemplateSpecName for Linked ARM Template $TemplateSpecName.json"
+#       Write-Host `n
+#     }
 
-    Write-Host "Successfully created all necessary Template Specs in Resource Group $DeployTemplateSpecsResourceGroupName"
-    Write-Host `n
+#     Write-Host "Successfully created all necessary Template Specs in Resource Group $DeployTemplateSpecsResourceGroupName"
+#     Write-Host `n
 
 
     # Reading the ArmTemplate_master.json file
