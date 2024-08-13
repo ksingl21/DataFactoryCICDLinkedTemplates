@@ -119,3 +119,6 @@ $LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -
     
     Write-Host "Successfully created the master Template Spec. Name: $TemplateSpecMasterName in Resource Group $DeployTemplateSpecsResourceGroupName"
 
+    
+
+

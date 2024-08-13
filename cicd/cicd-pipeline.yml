@@ -36,30 +36,13 @@ stages:
     
 
     - task: AzureCLI@2
-      displayName: 'Create New Linked Master ARM Template File'
-      inputs:
-        azureSubscription: 'DataFactoryCICDAzureResourceManager'
-        scriptType: 'pscore'
-        targetType: 'filePath'
-        scriptLocation: 'scriptPath'
-        scriptPath: '${{ variables.WorkingDirectory }}/cicd/new-linked-templates-process/CreateNewMasterARMTemplateFile.ps1'
-        arguments: "-FolderPathADFLinkedARMTemplates '$(Pipeline.Workspace)/${{ variables.ADFArtifactName }}/linkedTemplates' 
-                    -DeployTemplateSpecsResourceGroupName '${{ variables.DeployTemplateSpecsResourceGroupName }}' 
-                    -DeployTemplateSpecsResourceGroupLocation '${{ variables.DeployTemplateSpecsResourceGroupLocation }}' 
-                    -TemplateSpecsVersionNumber '${{ variables.TemplateSpecsVersionNumber }}'
-                    -TemplateSpecMasterName '${{ variables.TemplateSpecMasterName }}'
-                    -OutputFolderPathNewADFMasterARMTemplate  '${{ variables.WorkingDirectory }}'"
-
-
-
-    - task: AzureCLI@2
       displayName: 'Create Template Specs for ADF Linked ARM Templates'
       inputs:
         azureSubscription: 'DataFactoryCICDAzureResourceManager'
         scriptType: 'pscore'
         targetType: 'filePath'
         scriptLocation: 'scriptPath'
-        scriptPath: '${{ variables.WorkingDirectory }}/cicd/new-linked-template/new-linked-template-create-deploy.ps1' # $(System.DefaultWorkingDirectory)/cicd/... also works
+        scriptPath: '${{ variables.WorkingDirectory }}/cicd/new-linked-templates-process/new-linked-template-create-deploy.ps1' # $(System.DefaultWorkingDirectory)/cicd/... also works
         arguments: "-FolderPathADFLinkedARMTemplates '$(Pipeline.Workspace)/${{ variables.ADFArtifactName }}/linkedTemplates' 
                     -DeployTemplateSpecsResourceGroupName '${{ variables.DeployTemplateSpecsResourceGroupName }}' 
                     -DeployTemplateSpecsResourceGroupLocation '${{ variables.DeployTemplateSpecsResourceGroupLocation }}' 
@@ -67,6 +50,15 @@ stages:
                     -TemplateSpecMasterName '${{ variables.TemplateSpecMasterName }}'
                     -OutputFolderPathNewADFMasterARMTemplate  '${{ variables.WorkingDirectory }}'"
                     # FolderPathADFLinkedARMTemplates is where the pipeline stores the Data Factory (ADF) linked ARM Templates
+    
+    
+    - task: PublishPipelineArtifact@1
+      displayName: "Publish New Linked ARM Template Master File"
+      inputs:
+        targetPath: "${{ variables.WorkingDirectory }}/${{ variables.TemplateSpecMasterName }}"
+        artifactName: "NewLinkedARMTemplateMasterFile"
+        publishLocation: "pipeline"
+            
 
      
 # DEPLOY TO UAT
