@@ -75,7 +75,7 @@ stages:
     - task: PublishPipelineArtifact@1
       displayName: "Publish New Linked ARM Template Master File"
       inputs:
-        targetPath: "${{ variables.WorkingDirectory }}/${{ variables.TemplateSpecMasterName }}"
+        targetPath: "${{ variables.WorkingDirectory }}/${{ variables.TemplateSpecMasterName }}.json"
         artifactName: "NewLinkedARMTemplateMasterFile"
         publishLocation: "pipeline"
             
