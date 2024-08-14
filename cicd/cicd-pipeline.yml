@@ -148,22 +148,22 @@ stages:
 
     # Uncomment this task if you want to delete all of the Template Specs in the Resource Group. 
     # Note, this will delete all Template Specs in the Resource Group
-    - task: AzureCLI@2
-      displayName: 'Optionally Delete All of the Template Specs'
-      inputs:
-        azureSubscription: 'DataFactoryCICDAzureResourceManager'
-        scriptType: 'pscore'
-        targetType: 'filePath'
-        scriptLocation: 'inlineScript'
-        inlineScript: |
-          $TemplateSpecNames = $(az ts list --resource-group "${{ variables.TemplateSpecsResourceGroupName }}" --query "[].name" --output tsv)
+    # - task: AzureCLI@2
+    #   displayName: 'Optionally Delete All of the Template Specs'
+    #   inputs:
+    #     azureSubscription: 'DataFactoryCICDAzureResourceManager'
+    #     scriptType: 'pscore'
+    #     targetType: 'filePath'
+    #     scriptLocation: 'inlineScript'
+    #     inlineScript: |
+    #       $TemplateSpecNames = $(az ts list --resource-group "${{ variables.TemplateSpecsResourceGroupName }}" --query "[].name" --output tsv)
 
-          foreach($Name in $TemplateSpecNames){
-              Write-Host "Attempting to delete Template Spec $Name"
-              az resource delete --name "$Name" --resource-group "${{ variables.TemplateSpecsResourceGroupName }}" --resource-type "Microsoft.Resources/templateSpecs"
-              Write-Host "Successfully deleted Template Spec $Name"
-          }  
-          Write-Host "Successfully deleted all of the Template Specs from Resource Group ${{ variables.TemplateSpecsResourceGroupName }}"
+    #       foreach($Name in $TemplateSpecNames){
+    #           Write-Host "Attempting to delete Template Spec $Name"
+    #           az resource delete --name "$Name" --resource-group "${{ variables.TemplateSpecsResourceGroupName }}" --resource-type "Microsoft.Resources/templateSpecs"
+    #           Write-Host "Successfully deleted Template Spec $Name"
+    #       }  
+    #       Write-Host "Successfully deleted all of the Template Specs from Resource Group ${{ variables.TemplateSpecsResourceGroupName }}"
 
 
 
