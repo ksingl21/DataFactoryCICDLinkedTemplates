@@ -1,4 +1,4 @@
-name: DataFactory-Linked-Templates-CICD-Pipeline-$(Date:yyyyMMdd)$(Rev:.r)
+name: DataFactory-CICD-LinkedTemplates-$(Date:yyyyMMdd)$(Rev:.r)
 
 # ADF is the shortened version of Azure Data Factory
 
