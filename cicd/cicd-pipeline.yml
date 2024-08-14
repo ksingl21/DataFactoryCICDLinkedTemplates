@@ -1,4 +1,4 @@
-name: DataFactory-CICD-Pipeline-$(Date:yyyyMMdd)$(Rev:.r)
+name: DataFactory-Linked-Templates-CICD-Pipeline-$(Date:yyyyMMdd)$(Rev:.r)
 
 # ADF is the shortened version of Azure Data Factory
 
@@ -48,7 +48,7 @@ stages:
                     -DeployTemplateSpecsResourceGroupLocation '${{ variables.DeployTemplateSpecsResourceGroupLocation }}' 
                     -TemplateSpecsVersionNumber '${{ variables.TemplateSpecsVersionNumber }}'
                     -TemplateSpecMasterName '${{ variables.TemplateSpecMasterName }}'
-                    -OutputFolderPathNewADFMasterARMTemplate  '${{ variables.WorkingDirectory }}'"
+                    -OutputFolderPathNewADFMasterARMTemplate  '${{ variables.WorkingDirectory }}'" # Don't change this path
                     # FolderPathADFLinkedARMTemplates is where the pipeline stores the Data Factory (ADF) linked ARM Templates
 
     
