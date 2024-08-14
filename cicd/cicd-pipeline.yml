@@ -59,7 +59,6 @@ stages:
         artifactName: "NewLinkedARMTemplateMasterFile"
         publishLocation: "pipeline"
             
-
      
 # DEPLOY TO UAT
 - stage: DeployToUAT

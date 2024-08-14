@@ -104,7 +104,7 @@ $LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -
 
     # Ensures the JSON special characters are escaped and come through correctly. For example, not returning a \u0027 string value.
     # See https://stackoverflow.com/questions/47779157/convertto-json-and-convertfrom-json-with-special-characters for more details.
-    $MasterARMTemplateFile | ConvertTo-Json -Depth 15 | %{
+    $MasterARMTemplateFile | ConvertTo-Json -Depth 15 | ForEach-Object{
     [Regex]::Replace($_, 
         "\\u(?<Value>[a-zA-Z0-9]{4})", {
             param($m) ([char]([int]::Parse($m.Groups['Value'].Value,
