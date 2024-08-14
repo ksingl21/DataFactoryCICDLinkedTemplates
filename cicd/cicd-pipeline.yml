@@ -52,12 +52,12 @@ stages:
                     # FolderPathADFLinkedARMTemplates is where the pipeline stores the Data Factory (ADF) linked ARM Templates
 
     
-    # - task: PublishPipelineArtifact@1
-    #   displayName: "Publish New Linked ARM Template Master File"
-    #   inputs:
-    #     targetPath: "${{ variables.WorkingDirectory }}/${{ variables.TemplateSpecMasterName }}.json"
-    #     artifactName: "NewLinkedARMTemplateMasterFile"
-    #     publishLocation: "pipeline"
+    - task: PublishPipelineArtifact@1
+      displayName: "Publish New Linked ARM Template Master File"
+      inputs:
+        targetPath: "${{ variables.WorkingDirectory }}/${{ variables.TemplateSpecMasterName }}.json"
+        artifactName: "NewLinkedARMTemplateMasterFile"
+        publishLocation: "pipeline"
             
      
 # DEPLOY TO UAT

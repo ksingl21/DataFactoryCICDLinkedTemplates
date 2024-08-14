@@ -88,6 +88,7 @@ $LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -
 
     $Resource.Name -Match 'ArmTemplate_.*' # Extracts the ARM Template name out of the resource name property. Ex: my-datafactory-name_ArmTemplate_0 returns ArmTemplate_0
     $TemplateSpecExtractedName = $matches[0] # $matches is an automatic variable in PowerShell. https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_automatic_variables?view=powershell-7.4#matches
+                                             # $matches[0] will use the output of the above expression $Resources.Name - Match 'ArmTemplate_.*'. Ex: ArmTemplate_0
 
     $TemplateSpecResourceID = $(az ts show --name $TemplateSpecExtractedName --resource-group $DeployTemplateSpecsResourceGroupName --version $TemplateSpecsVersionNumber --query "id")
 
