@@ -1,9 +1,21 @@
 {
 	"name": "adf-linked-templates-njl",
+	"properties": {
+		"globalParameters": {
+			"GL_NUMBER": {
+				"type": "int",
+				"value": 1
+			},
+			"GL_STRING": {
+				"type": "string",
+				"value": "DEV"
+			}
+		}
+	},
 	"location": "eastus",
 	"identity": {
 		"type": "SystemAssigned",
-		"principalId": "0bceb14a-ad11-49d5-8371-46f3adc2273b",
+		"principalId": "512297ca-5d68-432b-81c9-f671ce0d2cce",
 		"tenantId": "2aa8e0e2-e629-4970-b9d6-d534a9ac3386"
 	}
 }
