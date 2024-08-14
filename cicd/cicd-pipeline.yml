@@ -156,11 +156,11 @@ stages:
         targetType: 'filePath'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          $TemplateSpecNames = $(az ts list --resource-group rg-adf-cicd-linked-uat --query "[].name" --output tsv)
+          $TemplateSpecNames = $(az ts list --resource-group "${{ variables.TemplateSpecsResourceGroupName }}" --query "[].name" --output tsv)
 
           foreach($Name in $TemplateSpecNames){
               Write-Host "Attempting to delete Template Spec $Name"
-              az resource delete --name '$Name' --resource-group '${{ variables.TemplateSpecsResourceGroupName }}' --resource-type 'Microsoft.Resources/templateSpecs'
+              az resource delete --name "$Name" --resource-group "${{ variables.TemplateSpecsResourceGroupName }}" --resource-type "Microsoft.Resources/templateSpecs"
               Write-Host "Successfully deleted Template Spec $Name"
           }  
           Write-Host "Successfully deleted all of the Template Specs from Resource Group ${{ variables.TemplateSpecsResourceGroupName }}"
