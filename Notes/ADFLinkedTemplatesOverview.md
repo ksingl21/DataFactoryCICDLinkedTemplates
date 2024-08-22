@@ -26,7 +26,7 @@
 
 ### Challenges
 
-- Storage Account has to have public access enabled (can't lock it down via firewall/private endpoints)
+- Storage Account has to have public access enabled (can't lock it down via firewall)
 - SAS doesn't need to authenticate users. Whoever has a SAS token can use it to access the Storage Account
 - SAS token is logged in the deployment operations even if passed as a secure string (see [Additional ARM Limits](https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/linked-templates?tabs=azure-powershell#securing-an-external-template))
 - No API or way to check how many SAS tokens are on a Storage Account
