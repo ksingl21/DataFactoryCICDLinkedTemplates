@@ -1,24 +1,17 @@
 
 
 <#
-PowerShell script can be used to deploy Data Factory (ADF) via linked templates in a more secure way instead of using a Storage Account and SAS token. 
-
-Use linked templates when the Data Factory ARM template is over 4 MB.
-
-Original linked template ADF approach for context: https://learn.microsoft.com/en-us/azure/data-factory/continuous-integration-delivery-linked-templates
-ARM Template limits: https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/best-practices#template-limits
-
 This script does the following things:
 
 Step 1:
-- Grabs the ADF linked template files 
-- For each ADF linked template file, creates a new Template Spec which stores the ADF linked template file (JSON). The ADF linked template file is not updated at all.
+- Fetch ADF linkedTemplate files generated during run of adf-build step.
+- For each ADF linked template sequence present create a corrosponding template spec in a resource group of your choice.
 
 
 Step 2:
-- Grabs the ADF linked template master file (ArmTemplate_master.json) and does the following:
-    - Removes the containerUri and containerSasToken parameters as they aren't needed anymore (using linked Template Specs instead)
-    - For each resource in the ArmTemplate_master.json file (linked ADF ARM template in the file):
+- Grabs the master file(ArmTemplate_master.json) within the linkedtemplate folder when artifact is generated and does the following:
+    - Removes the containerUri and containerSasToken parameters, these are not required when using template specs.
+    - For each resource in the ArmTemplate_master.json file :
         - Retrieves the Template Spec Resource ID for that file (ArmTemplate_0 for example)
         - Adds a new id property and adds the Template Spec Resource ID as the value
         - Removes the uri and contentVersion properties
@@ -26,13 +19,6 @@ Step 2:
     - Ensures the special characters in JSON are escaped properly when generating the updated file (see https://stackoverflow.com/questions/47779157/convertto-json-and-convertfrom-json-with-special-characters)
     - Outputs the new file (doesn't overwrite the existing file) to the root of the repository: Ex: "$(Build.Repository.LocalPath)/NewARMTemplateV2_master.json"
 
-
-# Helpful Links:
-# https://dev.to/adbertram/running-powershell-scripts-in-azure-devops-pipelines-2-of-2-3j0e
-# https://stackoverflow.com/questions/47779157/convertto-json-and-convertfrom-json-with-special-characters
-# https://learn.microsoft.com/en-us/cli/azure/delete-azure-resources-at-scale#delete-all-azure-resources-of-a-type
-# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_automatic_variables?view=powershell-7.4#matches
-# https://learn.microsoft.com/en-us/azure/data-factory/continuous-integration-delivery-linked-templates
 
 #>
 
@@ -87,8 +73,8 @@ $LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -
     foreach ($Resource in $MasterARMTemplateFile.resources) {
 
     $ResourceName = $Resource.Name -Match 'ArmTemplate_.*' # Extracts the ARM Template name out of the resource name property. Ex: my-datafactory-name_ArmTemplate_0 returns ArmTemplate_0
-    $TemplateSpecExtractedName = $matches[0] # $matches is an automatic variable in PowerShell. https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_automatic_variables?view=powershell-7.4#matches
-                                             # $matches[0] will use the output of the above expression $Resources.Name - Match 'ArmTemplate_.*'. Ex: ArmTemplate_0
+    $TemplateSpecExtractedName = $matches[0] 
+
 
     $TemplateSpecResourceID = $(az ts show --name $TemplateSpecExtractedName --resource-group $DeployTemplateSpecsResourceGroupName --version $TemplateSpecsVersionNumber --query "id")
 
@@ -104,7 +90,7 @@ $LinkedARMTemplateFiles = Get-ChildItem -Path $FolderPathADFLinkedARMTemplates -
     Write-Host "Attempting to output the new Master.json file"
 
     # Ensures the JSON special characters are escaped and come through correctly. For example, not returning a \u0027 string value.
-    # See https://stackoverflow.com/questions/47779157/convertto-json-and-convertfrom-json-with-special-characters for more details.
+  
     $MasterARMTemplateFile | ConvertTo-Json -Depth 15 | ForEach-Object{
     [Regex]::Replace($_, 
         "\\u(?<Value>[a-zA-Z0-9]{4})", {

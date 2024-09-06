@@ -28,8 +28,8 @@ parameters:
 - name: Environment
   type: string
   values:
-  - UAT
-  - PROD
+  - ADF_UAT
+  - ADF_Prod
 
 
 steps:
@@ -72,14 +72,14 @@ steps:
 - task: AzureCLI@2
   displayName: 'Deploy To ADF Using Linked Template Spec'
   inputs:
-    azureSubscription: 'DataFactoryCICDAzureResourceManager'
+    azureSubscription: "${{ parameters.AzureResourceManagerConnection }}"
     scriptType: 'pscore'
     targetType: 'filePath'
     scriptLocation: 'inlineScript'
     inlineScript: |
       Write-Host "Setting the subscription based on the ${{ parameters.Environment }} environment."
       
-      if('${{ parameters.Environment }}' -eq 'UAT'){
+      if('${{ parameters.Environment }}' -eq 'ADF_UAT'){
         az account set --subscription '$(UATSubscriptionID)'
       }else {
         az account set --subscription '$(PRODSubscriptionID)'

@@ -2,11 +2,11 @@ name: DataFactory-CICD-LinkedTemplates-$(Date:yyyyMMdd)$(Rev:.r)
 
 # ADF is the shortened version of Azure Data Factory
 
-trigger: none
-# - main # Will trigger the pipeline after a commit to the main branch. Can update to trigger: none to only run the pipeline manually.
+trigger:
+- main # Will trigger the pipeline after a commit to the main branch. Can update to trigger: none to only run the pipeline manually.
 
 pool:
-  vmImage: "windows-latest" # https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops&tabs=yaml # macOS-latest, ubuntu-latest
+  vmImage: "windows-latest" 
 
 stages:
 - stage: BuildDEVDataFactory
@@ -38,7 +38,7 @@ stages:
     - task: AzureCLI@2
       displayName: 'Create Template Specs for ADF Linked ARM Templates'
       inputs:
-        azureSubscription: 'DataFactoryCICDAzureResourceManager'
+        azureSubscription: "${{ variables.AzureResourceManagerConnection }}"
         scriptType: 'pscore'
         targetType: 'filePath'
         scriptLocation: 'scriptPath'
@@ -68,22 +68,21 @@ stages:
 
   variables:
   - template: variables/uat-variables.yml
-
+    
   jobs:
-  - job: DeployAzureResources
-    displayName: "Deploy Azure Resources Via Bicep"
-    steps:
-    - template: azure-resources/deploy-azure-resources.yml
-      parameters:
-        AzureResourceManagerConnection: "${{ variables.AzureResourceManagerConnection }}"
-        DataFactoryName: "${{ variables.DataFactoryName }}"
-        ADFResourceGroupName: "${{ variables.ADFResourceGroupName }}"
-        ADFBicepTemplateFilePath: "${{ variables.ADFBicepTemplateFilePath }}"
-      
+  - deployment: ApprovalCheckDeployToUAT
+    displayName: "Approval Check To Deploy To UAT"
+    environment: ADF_UAT
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - powershell: |
+              Write-Host "Deploy To UAT has been fully approved. Starting the deployment to UAT."
 
   - job: DeployDataFactory
     displayName: "Deploy ADF Using Linked Template Specs To Target ADF"
-    dependsOn: DeployAzureResources
+    dependsOn: ApprovalCheckDeployToUAT
     condition: succeeded()
     steps:
     - template: adf-cicd/adf-deploy.yml
@@ -112,22 +111,21 @@ stages:
 
   variables:
   - template: variables/prod-variables.yml
-
-  jobs:  
-  - job: DeployAzureResources
-    displayName: "Deploy Azure Resources Via Bicep"
-    steps:
-    - template: azure-resources/deploy-azure-resources.yml
-      parameters:
-        AzureResourceManagerConnection: "${{ variables.AzureResourceManagerConnection }}"
-        DataFactoryName: "${{ variables.DataFactoryName }}"
-        ADFResourceGroupName: "${{ variables.ADFResourceGroupName }}"
-        ADFBicepTemplateFilePath: "${{ variables.ADFBicepTemplateFilePath }}"
-
-
+  
+  jobs:
+  - deployment: ApprovalCheckDeployToPROD
+    displayName: "Approval Check To Deploy To PROD"
+    environment: ADF_Prod
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - powershell: |
+              Write-Host "Deploy To PROD has been fully approved. Starting the deployment to PROD."
+  
   - job: DeployDataFactory
     displayName: "Deploy ADF ARM Template To Target ADF"
-    dependsOn: DeployAzureResources
+    dependsOn: ApprovalCheckDeployToPROD
     condition: succeeded()
     steps:
     - template: adf-cicd/adf-deploy.yml
@@ -144,52 +142,22 @@ stages:
         TemplateSpecsResourceGroupLocation: "${{ variables.TemplateSpecsResourceGroupLocation }}"
         TemplateSpecMasterName: "${{ variables.TemplateSpecMasterName }}"
         TemplateSpecMasterVersionNumber: "${{ variables.TemplateSpecMasterVersionNumber }}"
+    
+    #Uncomment this task if you want to delete all of the Template Specs in the Resource Group. 
+    #Note, this will delete all Template Specs in the Resource Group
+    - task: AzureCLI@2
+      displayName: 'Optionally Delete All of the Template Specs'
+      inputs:
+        azureSubscription: "${{ variables.AzureResourceManagerConnection }}"
+        scriptType: 'pscore'
+        targetType: 'filePath'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          $TemplateSpecNames = $(az ts list --resource-group "${{ variables.TemplateSpecsResourceGroupName }}" --query "[].name" --output tsv)
 
-
-    # Uncomment this task if you want to delete all of the Template Specs in the Resource Group. 
-    # Note, this will delete all Template Specs in the Resource Group
-    # - task: AzureCLI@2
-    #   displayName: 'Optionally Delete All of the Template Specs'
-    #   inputs:
-    #     azureSubscription: 'DataFactoryCICDAzureResourceManager'
-    #     scriptType: 'pscore'
-    #     targetType: 'filePath'
-    #     scriptLocation: 'inlineScript'
-    #     inlineScript: |
-    #       $TemplateSpecNames = $(az ts list --resource-group "${{ variables.TemplateSpecsResourceGroupName }}" --query "[].name" --output tsv)
-
-    #       foreach($Name in $TemplateSpecNames){
-    #           Write-Host "Attempting to delete Template Spec $Name"
-    #           az resource delete --name "$Name" --resource-group "${{ variables.TemplateSpecsResourceGroupName }}" --resource-type "Microsoft.Resources/templateSpecs"
-    #           Write-Host "Successfully deleted Template Spec $Name"
-    #       }  
-    #       Write-Host "Successfully deleted all of the Template Specs from Resource Group ${{ variables.TemplateSpecsResourceGroupName }}"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+          foreach($Name in $TemplateSpecNames){
+              Write-Host "Attempting to delete Template Spec $Name"
+              az resource delete --name "$Name" --resource-group "${{ variables.TemplateSpecsResourceGroupName }}" --resource-type "Microsoft.Resources/templateSpecs"
+              Write-Host "Successfully deleted Template Spec $Name"
+          }  
+          Write-Host "Successfully deleted all of the Template Specs from Resource Group ${{ variables.TemplateSpecsResourceGroupName }}"

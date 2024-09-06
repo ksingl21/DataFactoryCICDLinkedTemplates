@@ -1,28 +1,25 @@
 # PROD Pipeline Variables
 
 variables:
-- name: AzureResourceManagerConnection # Service Principal that has the Contributor RBAC (role based access control) permission to deploy the Data Factory ARM template to the UAT resource group rg-adf-cicd-uat
-  value: DataFactoryCICDAzureResourceManager
+- name: AzureResourceManagerConnection # Service Principal that has the Contributor RBAC permission to deploy the Data Factory ARM template to the PROD
+  value: DAzureDataFactoryCICD
 
 # Data Factory (ADF)
 - name: DataFactoryName
-  value: adf-linked-templates-njl-prod
+  value: udemy-adf-prod
 
 - name: DataFactoryTemplateParametersFilePath
   value: "$(Build.Repository.LocalPath)/cicd/adf-cicd/adf-prod-template-parameters.json"
 
-- name: ADFBicepTemplateFilePath
-  value: "$(Build.Repository.LocalPath)/cicd/azure-resources/adf.bicep"
-
 - name: ADFResourceGroupName
-  value: rg-adf-cicd-linked-prod
+  value: kapiltestazure
 
 - name: ADFArtifactName # Data Factory artifact name created during the adf-build.yml job template
   value: ADFArtifact
 
 # Linked ADF ARM Template Deployment Variables
 - name: TemplateSpecsResourceGroupName
-  value: rg-adf-cicd-linked-uat
+  value: kapiltestazure
 
 - name: TemplateSpecsResourceGroupLocation
   value: "eastus"
@@ -38,4 +35,4 @@ variables:
   value: "East US"
 
 - name: Environment
-  value: PROD
+  value: ADF_Prod

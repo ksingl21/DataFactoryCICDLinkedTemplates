@@ -3,16 +3,31 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "factoryName": {
-            "value": "adf-linked-templates-njl-prod"
+            "value": "udemy-adf-prod"
         },
-        "LS_ADLS_properties_typeProperties_url": {
-            "value": "https://adlsprod11223.dfs.core.windows.net/"
+        "LSMolinaNM_accountKey": {
+            "value": ""
         },
-        "default_properties_GL_NUMBER_value": {
-            "value": 3
+        "ls_snk_data_accountKey": {
+            "value": ""
         },
-        "default_properties_GL_STRING_value": {
-            "value": "PROD"
+        "ls_st_raw_connectionString": {
+            "value": ""
+        },
+        "MDT outbound file_accountKey": {
+            "value": ""
+        },
+        "MDT_inbound files_connectionString": {
+            "value": ""
+        },
+        "LSMolinaNM_properties_typeProperties_url": {
+            "value": "https://snkdta.dfs.core.windows.net/"
+        },
+        "ls_snk_data_properties_typeProperties_url": {
+            "value": "https://snkdta.dfs.core.windows.net/"
+        },
+        "MDT outbound file_properties_typeProperties_url": {
+            "value": "https://snkdta.dfs.core.windows.net/"
         }
     }
 }
